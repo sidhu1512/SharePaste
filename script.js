@@ -115,7 +115,7 @@ function updateUrl(saveToHistory = false) {
 
     // Calculate projected length for stats
     const projectedLength = window.location.origin.length + 2 + base64.length;
-    stats.innerText = `${projectedLength} CHARS (Link Size)`;
+    stats.innerText = `${projectedLength} CHARS `;
 }
 
 /**
