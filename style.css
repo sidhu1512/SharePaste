@@ -1,0 +1,147 @@
+/* * SharePaste - Main Stylesheet 
+ * Handles editor layering, transparency, and modal animations.
+ */
+
+/* --- CSS VARIABLES --- */
+:root {
+    --editor-font: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+    --editor-size: 14px;
+    --editor-line-height: 24px;
+    --editor-padding: 20px;
+    --line-num-width: 40px; 
+}
+
+@media (min-width: 768px) {
+    :root { --editor-padding: 32px; }
+}
+
+/* --- UTILITIES --- */
+/* Hide scrollbars for a cleaner, modern look */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { display: none; }
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: #050505;
+    color: #a1a1aa;
+    overflow: hidden; 
+}
+
+/* --- EDITOR CONTAINER --- */
+.editor-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    
+    /* BACKGROUND: Matches Prism's Dark Gray Theme (#2d2d2d) */
+    /* This ensures the line number column blends seamlessly */
+    background: #2d2d2d; 
+    
+    will-change: transform; 
+    transform: translateZ(0); 
+    display: flex; 
+}
+
+/* --- PRISM OVERRIDES --- */
+/* Force transparent background on Prism blocks so the container bg shows through */
+pre[class*="language-"], code[class*="language-"] {
+    background: transparent !important;
+    text-shadow: none !important;
+}
+
+/* --- LEFT COLUMN: LINE NUMBERS --- */
+#line-numbers {
+    position: relative; 
+    flex-shrink: 0;    
+    width: calc(var(--editor-padding) + var(--line-num-width));
+    padding-top: var(--editor-padding);
+    padding-bottom: 60vh; 
+    padding-right: 10px;
+    
+    text-align: right;
+    background: transparent; 
+    color: #52525b; /* Zinc-600 */
+    overflow: hidden; 
+    
+    user-select: none;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* --- RIGHT COLUMN: CODE WRAPPER --- */
+#code-wrapper {
+    position: relative;
+    flex-grow: 1; 
+    height: 100%;
+    overflow: hidden; 
+}
+
+/* --- CORE EDITOR TYPOGRAPHY --- */
+/* Ensures strict alignment between the invisible textarea and visible code */
+#editor, #highlighting, #highlighting code, #line-numbers {
+    font-family: var(--editor-font) !important;
+    font-size: var(--editor-size) !important;
+    line-height: var(--editor-line-height) !important;
+    tab-size: 4 !important;
+    font-variant-ligatures: none;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0px;
+}
+
+/* --- SCROLLABLE LAYERS --- */
+#editor, #highlighting {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    border: 0 !important;
+    box-sizing: border-box;
+    
+    padding-top: var(--editor-padding) !important;
+    padding-left: 0 !important; 
+    padding-right: var(--editor-padding) !important;
+    padding-bottom: 60vh !important; /* Huge padding for comfortable scrolling */
+    
+    overflow: auto; 
+    white-space: pre; 
+}
+
+/* --- Z-INDEX LAYERING --- */
+/* Bottom Layer: Visible Syntax Highlighting */
+#highlighting { z-index: 0; pointer-events: none; }
+#highlighting code { padding: 0 !important; margin: 0 !important; display: block; }
+
+/* Top Layer: Invisible Textarea for Typing */
+#editor {
+    z-index: 1;
+    color: transparent;
+    background: transparent;
+    caret-color: #22c55e;
+    resize: none;
+}
+#editor:focus { outline: none; }
+#editor::selection { background: rgba(34, 197, 94, 0.2); color: transparent; }
+
+/* --- ANIMATIONS --- */
+.modal-bg { transition: opacity 0.2s ease-in-out; }
+.modal-bg.hidden { opacity: 0; pointer-events: none; }
+.modal-bg:not(.hidden) { opacity: 1; pointer-events: auto; }
+
+.snowflake {
+    position: fixed;
+    top: -20px;
+    color: white;
+    user-select: none;
+    pointer-events: none; 
+    z-index: 50; 
+    animation-name: fall;
+    animation-timing-function: linear;
+}
+
+@keyframes fall {
+    to { transform: translateY(105vh); }
+}

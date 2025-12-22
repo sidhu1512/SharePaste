@@ -1,30 +1,132 @@
 /*
- * SharePaste - Serverless Text Sharing
- * Core Logic: Handles text compression, URL updates, and UI synchronization.
+ * SharePaste - Core Logic
+ * Description: Serverless text sharing with Zstandard compression and smart performance limits.
+ * Author: Siddharth Bhadu
  */
 
-// Import Zstandard WASM (WebAssembly) for high-performance compression
 import { init, compress, decompress } from 'https://esm.sh/@bokuweb/zstd-wasm';
 
-// DOM Elements
+/* =========================================
+   1. CONFIGURATION & LIMITS
+   ========================================= */
+const MAX_LINES = 5000;          // Hard Limit: Truncates text to prevent browser freeze
+const URL_WARN_LIMIT = 50000;    // Soft Limit: Visual Red Warning only
+const HIGHLIGHT_LIMIT = 800;     // Disable syntax highlighting above this line count for speed
+const TINY_URL_LIMIT = 18000;    // Max characters allowed for TinyURL generation
+
+/* =========================================
+   2. DOM ELEMENTS
+   ========================================= */
 const editor = document.getElementById('editor');
 const codeContent = document.getElementById('code-content');
 const highlighting = document.getElementById('highlighting');
 const stats = document.getElementById('stats');
-const copyBtn = document.getElementById('copy-btn');
-const copyText = document.getElementById('copy-text');
-const qrBtn = document.getElementById('qr-btn');
-const qrModal = document.getElementById('qr-modal');
-const closeQr = document.getElementById('close-qr');
-const qrcodeDiv = document.getElementById('qrcode');
+const lineNumbers = document.getElementById('line-numbers');
+
+const sendBtn = document.getElementById('send-btn');
+const downloadBtn = document.getElementById('download-btn');
 const aboutBtn = document.getElementById('about-btn');
+const lockBtn = document.getElementById('lock-btn');
+const lockIcon = document.getElementById('lock-icon');
+let isLocked = false;
+
+const shareModal = document.getElementById('share-modal');
+const closeShare = document.getElementById('close-share');
+const qrcodeDiv = document.getElementById('qrcode');
+const qrWrapper = qrcodeDiv ? qrcodeDiv.parentElement : null; 
+const shareUrlInput = document.getElementById('share-url');
+const modalCopyBtn = document.getElementById('modal-copy-btn');
+
 const aboutModal = document.getElementById('about-modal');
 const closeAbout = document.getElementById('close-about');
 
-/**
- * Detects the programming language based on simple keywords.
- * Used to set the Prism.js class for highlighting.
- */
+const snowBtn = document.getElementById('snow-btn');
+const snowText = document.getElementById('snow-text');
+const snowContainer = document.getElementById('snow-container');
+let snowInterval = null;
+
+let debounceTimer; 
+
+/* =========================================
+   3. INITIALIZATION
+   ========================================= */
+async function main() {
+    try {
+        await init('./zstd.wasm');
+        console.log("WASM Loaded");
+    } catch (e) {
+        console.error("WASM Load Issue:", e);
+    }
+    // If URL has hash data, decode it immediately on load
+    if (window.location.hash.length > 1) decodeUrl();
+}
+
+/* =========================================
+   4. PERFORMANCE HANDLERS
+   ========================================= */
+
+function handleScroll() {
+    highlighting.scrollTop = editor.scrollTop;
+    highlighting.scrollLeft = editor.scrollLeft;
+    if (lineNumbers) lineNumbers.scrollTop = editor.scrollTop;
+}
+
+function handleInput() {
+    let text = editor.value;
+    
+    // --- 1. FAST LINE COUNTING & TRUNCATION ---
+    let lineCount = 1;
+    let limitIndex = -1;
+    
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === '\n') {
+            lineCount++;
+            if (lineCount > MAX_LINES) {
+                limitIndex = i;
+                break;
+            }
+        }
+    }
+
+    if (limitIndex !== -1) {
+        text = text.substring(0, limitIndex);
+        editor.value = text;
+        lineCount = MAX_LINES; 
+    }
+
+    // --- 2. HTML ESCAPE ---
+    let safeText = text.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+
+    if (safeText[safeText.length - 1] === "\n") safeText += " "; 
+    codeContent.innerHTML = safeText;
+
+    // --- 3. UPDATE LINE NUMBERS ---
+    if (lineNumbers) {
+        if (lineNumbers.childElementCount !== lineCount) {
+             lineNumbers.innerText = Array(lineCount).fill(0).map((_, i) => i + 1).join('\n');
+        }
+    }
+
+    // --- 4. SMART HIGHLIGHTING ---
+    if (lineCount > HIGHLIGHT_LIMIT) {
+        codeContent.className = 'language-text'; 
+    } else {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            const lang = detectLanguage(text);
+            codeContent.className = `language-${lang}`;
+            Prism.highlightElement(codeContent); 
+        }, 300);
+    }
+
+    // --- 5. UPDATE URL & STATS ---
+    setTimeout(() => updateUrl(false, lineCount), 100);
+}
+
 function detectLanguage(code) {
     if (!code) return 'text';
     if (code.includes('def ') && code.includes('import ')) return 'python';
@@ -33,169 +135,178 @@ function detectLanguage(code) {
     if (code.includes('#include') && code.includes('int main')) return 'cpp';
     if (code.includes('<html>') || code.includes('</div>')) return 'html';
     if (code.includes('body {') || code.includes('color:')) return 'css';
-    return 'javascript'; // Default fallback
+    return 'javascript';
 }
 
-/**
- * Synchronizes the transparent textarea with the colored code block.
- * Handles HTML escaping and scroll positioning.
- */
-function syncEditor() {
-    let text = editor.value;
-
-    // Escape HTML characters to prevent rendering issues in the pre/code block
-    let safeText = text.replace(/&/g, "&amp;")
-                       .replace(/</g, "&lt;")
-                       .replace(/>/g, "&gt;")
-                       .replace(/"/g, "&quot;")
-                       .replace(/'/g, "&#039;");
-
-    // Sync scroll positions
-    highlighting.scrollTop = editor.scrollTop;
-    highlighting.scrollLeft = editor.scrollLeft;
-
-    // Apply syntax highlighting
-    const lang = detectLanguage(text);
-    codeContent.className = `language-${lang}`;
-    
-    // Add trailing space for proper newline rendering
-    if (safeText[safeText.length - 1] === "\n") safeText += " "; 
-    
-    codeContent.innerHTML = safeText;
-    Prism.highlightElement(codeContent);
-}
-
-/**
- * Initialize the Zstandard WASM engine.
- * Check for existing hash in URL to load content.
- */
-async function main() {
-    try {
-        await init('./zstd.wasm');
-    } catch (e) {
-        console.error("Engine Failed to Load", e);
-    }
-    
-    // If user opens a link with data, decode it
-    if (window.location.hash.length > 1) {
-        decodeUrl();
-    }
-}
-
-/**
- * Compresses text and updates the URL (optionally).
- * @param {boolean} saveToHistory - If true, updates the browser address bar.
- */
-function updateUrl(saveToHistory = false) {
+/* =========================================
+   5. CORE LOGIC (Compress/Decompress)
+   ========================================= */
+function updateUrl(saveToHistory = false, currentLines = 0) {
     const text = editor.value;
-    syncEditor();
-
+    
     if (!text) {
         if (saveToHistory) window.history.replaceState(null, null, ' ');
-        stats.innerText = "0 CHARS";
+        stats.innerHTML = "0 LINES";
         return;
     }
 
-    // 1. Convert Text to Binary
-    const buffer = new TextEncoder().encode(text);
-    
-    // 2. Compress using Zstandard (Level 10)
-    const compressed = compress(buffer, 10);
-    
-    // 3. Convert Binary to Base64 String
-    const binaryString = Array.from(compressed, (byte) => String.fromCharCode(byte)).join('');
-    
-    // 4. Make Base64 URL-Safe (+ -> -, / -> _)
-    const base64 = btoa(binaryString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    
-    // Only clutter the address bar if explicitly requested (e.g., clicking 'Generate Link')
-    if (saveToHistory) {
-        window.history.replaceState(null, null, '#' + base64);
-    }
+    try {
+        const buffer = new TextEncoder().encode(text);
+        const compressed = compress(buffer, 10);
+        const binaryString = Array.from(compressed, (byte) => String.fromCharCode(byte)).join('');
+        const base64 = btoa(binaryString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        
+        if (saveToHistory) window.history.replaceState(null, null, '#' + base64);
+        
+        const linkLen = window.location.origin.length + 2 + base64.length;
+        
+        const lineClass = currentLines >= MAX_LINES ? "text-red-500 font-bold animate-pulse" : "text-zinc-500";
+        const urlClass = linkLen >= URL_WARN_LIMIT ? "text-red-500 font-bold animate-pulse" : "text-zinc-500";
 
-    // Calculate projected length for stats
-    const projectedLength = window.location.origin.length + 2 + base64.length;
-    stats.innerText = `${projectedLength} CHARS `;
+        stats.innerHTML = `
+            <span class="${lineClass}">${currentLines} LINES</span> 
+            <span class="text-zinc-700 mx-1">|</span> 
+            <span class="${urlClass}">${(linkLen/1000).toFixed(1)}k URL</span>
+        `;
+
+    } catch (e) {
+        console.error("Compression Error", e);
+    }
 }
 
-/**
- * Decodes the URL hash back into text.
- * Reverse of updateUrl().
- */
 function decodeUrl() {
     try {
         const hash = window.location.hash.slice(1);
-        
-        // Reverse URL-Safe Base64
         let base64 = hash.replace(/-/g, '+').replace(/_/g, '/');
         while (base64.length % 4) base64 += '=';
         
-        // Base64 -> Binary
         const binaryString = atob(base64);
         const compressed = new Uint8Array(binaryString.length);
         for(let i=0; i<binaryString.length; i++) compressed[i] = binaryString.charCodeAt(i);
         
-        // Decompress -> Text
         const text = new TextDecoder().decode(decompress(compressed));
-        
         editor.value = text;
-        syncEditor();
-        stats.innerText = `${window.location.href.length} CHARS`;
+        
+        handleInput(); 
+        handleScroll();
     } catch (e) {
-        editor.value = "// ERROR: Link data is corrupted or incomplete.";
-        syncEditor();
+        editor.value = "// ERROR: Link data corrupted or failed to decode.";
+        handleInput();
     }
 }
 
-/**
- * Generates a QR Code for the current link.
- * Uses TinyURL API if the link is too long for standard QR scanners.
- */
-async function showQR() {
-    // Ensure URL is up to date in address bar
-    updateUrl(true);
-    
-    qrcodeDiv.innerHTML = "";
+/* =========================================
+   6. UI UTILITIES (Smart QR Logic)
+   ========================================= */
+async function openShareMenu() {
+    updateUrl(true, editor.value.split('\n').length); 
     const longUrl = window.location.href;
-    let targetUrl = longUrl;
+    const urlLength = longUrl.length;
+    
+    shareUrlInput.value = longUrl;
+    modalCopyBtn.innerText = "Copy";
+    modalCopyBtn.classList.remove("text-green-400");
+    shareModal.classList.remove('hidden');
 
-    // Show loading state
-    qrcodeDiv.innerHTML = `<div class="text-zinc-500 text-xs animate-pulse p-4">Optimizing QR...</div>`;
-    qrModal.classList.remove('hidden');
-
-    // If URL is massive (>300 chars), try to shorten it for better scanning
-    if (longUrl.length > 300) {
-        try {
-            const tinyRes = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-            if (tinyRes.ok) {
-                targetUrl = await tinyRes.text();
-            }
-        } catch (e) {
-            console.warn("Shortener failed, falling back to long URL");
-        }
-    }
-
-    // Generate QR
     qrcodeDiv.innerHTML = "";
-    new QRCode(qrcodeDiv, {
-        text: targetUrl,
-        width: 200,
-        height: 200,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.L
-    });
+    if (qrWrapper) qrWrapper.className = "p-2 bg-white rounded-lg";
+
+    // CASE A: Small URL (Instant QR)
+    if (urlLength <= 700) {
+        new QRCode(qrcodeDiv, { 
+            text: longUrl, width: 180, height: 180, 
+            colorDark: "#000000", colorLight: "#ffffff", 
+            correctLevel: QRCode.CorrectLevel.L 
+        });
+    } 
+    
+    // CASE B: Medium URL (Try Direct TinyURL)
+    else if (urlLength <= TINY_URL_LIMIT) {
+        qrcodeDiv.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-[180px] w-[180px] text-center">
+                <div class="text-zinc-400 text-xs animate-pulse">Generating...</div>
+            </div>
+        `;
+        
+        const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
+        
+        try {
+            const res = await fetch(apiUrl);
+            
+            if (res.ok) {
+                const shortUrl = await res.text();
+                qrcodeDiv.innerHTML = "";
+                new QRCode(qrcodeDiv, { 
+                    text: shortUrl, width: 180, height: 180, 
+                    colorDark: "#000000", colorLight: "#ffffff", 
+                    correctLevel: QRCode.CorrectLevel.L 
+                });
+
+                const msg = document.createElement("div");
+                msg.className = "text-[10px] text-zinc-500 mt-2 text-center font-medium border-t border-zinc-100 pt-1";
+                msg.innerText = "QR using TinyURL";
+                qrcodeDiv.appendChild(msg);
+                return;
+            }
+            throw new Error("Shortener API Error");
+        } catch (e) {
+            showDarkMessage("Connection Failed", "TinyURL blocked request.");
+        }
+    } 
+    
+    // CASE C: Massive URL (Too Large for QR)
+    else {
+        showDarkMessage("URL is too dense for QR", "Use the link below");
+    }
 }
 
-// --- EVENT LISTENERS ---
+function showDarkMessage(title, subtitle) {
+    if (qrWrapper) {
+        qrWrapper.className = "flex flex-col items-center justify-center p-6 border border-dashed border-zinc-800 rounded-lg bg-transparent w-full h-[200px]";
+    }
+    qrcodeDiv.innerHTML = `
+        <div class="text-center">
+            <div class="text-zinc-300 font-medium text-sm mb-1">${title}</div>
+            <div class="text-zinc-600 text-xs">${subtitle}</div>
+        </div>
+    `;
+}
 
-// Typing: Update editor visuals but NOT the URL (Clean Mode)
-editor.addEventListener('input', () => updateUrl(false));
+function downloadCode() {
+    const blob = new Blob([editor.value], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `SharePaste.txt`; 
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 
-// Scrolling: Keep highlight layer in sync
-editor.addEventListener('scroll', syncEditor);
+function toggleLock() {
+    isLocked = !isLocked;
+    editor.readOnly = isLocked;
+    
+    if (isLocked) {
+        // Locked
+        lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>'; 
+        lockBtn.classList.add('text-red-400', 'opacity-100');
+        lockBtn.classList.remove('text-zinc-400'); 
+        editor.classList.add('cursor-not-allowed', 'opacity-80');
+    } else {
+        // Unlocked
+        lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>';         
+        lockBtn.classList.add('text-zinc-400'); 
+        lockBtn.classList.remove('text-red-400', 'opacity-100');        
+        editor.classList.remove('cursor-not-allowed', 'opacity-80');
+    }
+}
 
-// Tab Key Support: Insert spaces instead of changing focus
+/* =========================================
+   7. EVENT LISTENERS
+   ========================================= */
+editor.addEventListener('scroll', handleScroll);
+editor.addEventListener('input', handleInput);
 editor.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
         e.preventDefault();
@@ -203,44 +314,52 @@ editor.addEventListener('keydown', (e) => {
     }
 });
 
-// QR Modal Interactions
-qrBtn.addEventListener('click', showQR);
-closeQr.addEventListener('click', () => qrModal.classList.add('hidden'));
-qrModal.addEventListener('click', (e) => {
-    if (e.target === qrModal) qrModal.classList.add('hidden');
-});
+if (sendBtn) sendBtn.addEventListener('click', openShareMenu);
+if (downloadBtn) downloadBtn.addEventListener('click', downloadCode);
+if (lockBtn) lockBtn.addEventListener('click', toggleLock);
 
-// About Modal Interactions
-if (aboutBtn) {
-    aboutBtn.addEventListener('click', () => aboutModal.classList.remove('hidden'));
-}
-if (closeAbout) {
-    closeAbout.addEventListener('click', () => aboutModal.classList.add('hidden'));
-}
-aboutModal.addEventListener('click', (e) => {
-    if (e.target === aboutModal) aboutModal.classList.add('hidden');
-});
-
-// Copy / Generate Link Button
-copyBtn.addEventListener('click', () => {
-    // Force URL update before copying
-    updateUrl(true);
-    
-    navigator.clipboard.writeText(window.location.href).then(() => {
-        const originalText = copyText.innerText;
-        
-        // Visual Feedback
-        copyText.innerText = "Copied";
-        copyBtn.classList.add("text-white");
-        copyBtn.classList.remove("text-zinc-400");
-        
-        setTimeout(() => {
-            copyText.innerText = originalText;
-            copyBtn.classList.remove("text-white");
-            copyBtn.classList.add("text-zinc-400");
-        }, 2000);
+// Snow Effect Logic
+if (snowBtn) {
+    snowBtn.addEventListener('click', () => {
+        if (snowInterval) {
+            clearInterval(snowInterval); snowInterval = null;
+            if(snowText) snowText.innerText = "Snow";
+            snowBtn.classList.remove("text-white");
+            snowBtn.classList.add("text-zinc-400"); // Updated to zinc-400
+        } else {
+            snowInterval = setInterval(() => {
+                const s = document.createElement('div');
+                s.innerText = '❅'; s.classList.add('snowflake');
+                s.style.left = Math.random() * 100 + 'vw';
+                s.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                s.style.opacity = Math.random() * 0.5 + 0.1;
+                s.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                snowContainer.appendChild(s);
+                setTimeout(() => s.remove(), 4000);
+            }, 100);
+            if(snowText) snowText.innerText = "Stop";
+            snowBtn.classList.add("text-white");
+            snowBtn.classList.remove("text-zinc-400");
+        }
     });
-});
+}
 
-// Start Application
+// Modal Closers
+if (closeShare) closeShare.addEventListener('click', () => shareModal.classList.add('hidden'));
+if (shareModal) shareModal.addEventListener('click', (e) => { if (e.target === shareModal) shareModal.classList.add('hidden'); });
+
+if (modalCopyBtn) {
+    modalCopyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+            modalCopyBtn.innerText = "Copied!";
+            modalCopyBtn.classList.add("text-green-400");
+            setTimeout(() => { modalCopyBtn.innerText = "Copy"; modalCopyBtn.classList.remove("text-green-400"); }, 2000);
+        });
+    });
+}
+
+if (aboutBtn) aboutBtn.addEventListener('click', () => aboutModal.classList.remove('hidden'));
+if (closeAbout) closeAbout.addEventListener('click', () => aboutModal.classList.add('hidden'));
+if (aboutModal) aboutModal.addEventListener('click', (e) => { if (e.target === aboutModal) aboutModal.classList.add('hidden'); });
+
 main();
