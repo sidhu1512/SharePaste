@@ -4,7 +4,7 @@
  * Author: Siddharth Bhadu
  */
 
-import { init, compress, decompress } from 'https://esm.sh/@bokuweb/zstd-wasm';
+import { init, compress, decompress } from './zstd.js';
 
 /* =========================================
    1. CONFIGURATION & LIMITS
