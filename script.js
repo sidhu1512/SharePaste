@@ -2,8 +2,7 @@ import { init, compress, decompress } from './zstd.js';
 
 const MAX_LINES = 10000;          
 const HIGHLIGHT_LIMIT = 10000;  
-const P2P_LIMIT = 800;          // FIXED: Lowered so 1.3k triggers P2P seamlessly
-const SHORTEN_LIMIT = 2000;     // FIXED: Hard cap to prevent CORS/AllOrigins 500 error on massive URLs
+const P2P_LIMIT = 800; // Trigger P2P immediately if URL > 800 chars so QR is always perfectly readable
 
 const editor = document.getElementById('editor');
 const codeContent = document.getElementById('code-content');
@@ -25,11 +24,9 @@ const downloadBtn = document.getElementById('download-btn');
 const shareModal = document.getElementById('share-modal');
 const closeShare = document.getElementById('close-share');
 const qrcodeDiv = document.getElementById('qrcode');
-const qrWrapper = qrcodeDiv ? qrcodeDiv.parentElement : null; 
+const qrStatus = document.getElementById('qr-status');
 const shareUrlInput = document.getElementById('share-url');
 const modalCopyBtn = document.getElementById('modal-copy-btn');
-const shortenLinkBtn = document.getElementById('shorten-link-btn');
-const urlWarning = document.getElementById('url-warning');
 
 let debounceTimer = null; 
 let urlDebounceTimer = null; 
@@ -47,6 +44,11 @@ const themes = [
 let currentThemeIndex = 0;
 
 async function main() {
+    // Tell Prism Autoloader to automatically fetch language syntax files from CDN
+    if (window.Prism && window.Prism.plugins && window.Prism.plugins.autoloader) {
+        window.Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+    }
+    
     try { await init('./zstd.wasm'); } catch (e) { console.error(e); }
     checkInitialHash();
 }
@@ -119,7 +121,7 @@ tbExpand.addEventListener('click', () => {
 });
 
 /* =========================================
-   CORE LOGIC
+   CORE LOGIC & SYNTAX HIGHLIGHTING
    ========================================= */
 
 function handleScroll() {
@@ -172,15 +174,22 @@ function handleInput() {
     urlDebounceTimer = setTimeout(() => updateUrl(false, lineCount), 400);
 }
 
+// Improved Heuristics for bulletproof auto-coloring
 function detectLanguage(code) {
-    if (!code) return 'text';
-    if (/^\s*(import|from)\s+\w+/m.test(code) || /^\s*def\s+\w+\s*\(/m.test(code)) return 'python';
-    if (/(public\s+)?class\s+\w+/.test(code) || /public\s+static\s+void\s+main/.test(code)) return 'java';
-    if (/#include\s*</.test(code) || /int\s+main\s*\(/.test(code)) return 'cpp';
-    if (/<\/?[a-z][\s\S]*>/i.test(code)) return 'html';
-    if (/[a-z-]+\s*:\s*[^;]+;/i.test(code) && code.includes('{') && code.includes('}')) return 'css';
+    if (!code) return 'javascript';
+    if (/^\s*(import|from)\s+\w+/m.test(code) || /^\s*def\s+\w+\s*\(/m.test(code) || /print\(/.test(code)) return 'python';
+    if (/(public\s+)?(class|interface)\s+\w+/.test(code) || /public\s+static\s+void\s+main/.test(code) || /System\.out\.println/.test(code)) return 'java';
+    if (/#include\s*</.test(code) || /int\s+main\s*\(/.test(code) || /std::/.test(code)) return 'cpp';
+    if (/<\/?[a-z][\s\S]*>/i.test(code)) return 'markup'; // markup handles HTML/XML beautifully
+    if (/^[\s\w-]+\s*:\s*[^;]+;/m.test(code) && code.includes('{') && code.includes('}')) return 'css';
     if (/function\s*\w*\s*\(|const\s+\w+\s*=|let\s+\w+\s*=|=>/.test(code)) return 'javascript';
-    return 'text'; // Fallback
+    if (/^\s*package\s+\w+/m.test(code) || /^\s*func\s+\w+\s*\(/m.test(code)) return 'go';
+    if (/^\s*fn\s+\w+\s*\(/m.test(code) || /^\s*let\s+mut\s+/.test(code)) return 'rust';
+    if (/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE)\s+/im.test(code)) return 'sql';
+    if (/^\s*[{[]\s*".+"\s*:\s*/m.test(code)) return 'json';
+    
+    // Defaulting to Javascript paints almost all generic code (curly braces, strings) beautifully
+    return 'javascript'; 
 }
 
 function updateUrl(saveToHistory = false, currentLines = 0) {
@@ -225,7 +234,7 @@ function decodeUrl() {
 }
 
 /* =========================================
-   SHARE, P2P & WHATSAPP SHORTENER
+   SHARE & P2P SYNC LOGIC
    ========================================= */
 
 function openShareMenu() {
@@ -236,99 +245,57 @@ function openShareMenu() {
     shareUrlInput.value = longUrl;
     modalCopyBtn.innerText = "Copy";
     modalCopyBtn.classList.remove("text-green-400");
-    
-    // Reset WhatsApp button
-    shortenLinkBtn.innerHTML = "Shorten Link (For WhatsApp)";
-    shortenLinkBtn.classList.remove('bg-green-600', 'text-white', 'pointer-events-none');
-    shortenLinkBtn.classList.add('bg-zinc-800', 'text-zinc-300', 'hover:bg-zinc-700');
-    
-    // Check WhatsApp limit logic
-    if (urlLength > SHORTEN_LIMIT) {
-        // Prevent CORS / 500 Error Crash by entirely hiding and disabling
-        urlWarning.innerText = "⚠️ Link is too massive for URL shorteners. Scan the QR code below for Live Sync instead!";
-        urlWarning.classList.remove('hidden');
-        shortenLinkBtn.classList.add('hidden');
-    } else if (urlLength > P2P_LIMIT) {
-        urlWarning.innerText = "⚠️ Link might be too long for WhatsApp. Generate a short link below!";
-        urlWarning.classList.remove('hidden');
-        shortenLinkBtn.classList.remove('hidden');
-    } else {
-        urlWarning.classList.add('hidden');
-        shortenLinkBtn.classList.add('hidden');
-    }
-    
     shareModal.classList.remove('hidden');
-    qrcodeDiv.innerHTML = "";
-    if (qrWrapper) qrWrapper.className = "p-2 bg-white rounded-lg flex flex-col justify-center items-center";
 
-    // P2P Trigger at 800 threshold so QR is ALWAYS readable
+    qrcodeDiv.innerHTML = "";
+    
+    // Clean out previous states
     if (urlLength <= P2P_LIMIT) {
         new window.QRCode(qrcodeDiv, { text: longUrl, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: window.QRCode.CorrectLevel.L });
-        const msg = document.createElement("div");
-        msg.className = "text-[10px] text-zinc-500 mt-2 text-center font-medium border-t border-zinc-100 pt-1 w-full";
-        msg.innerText = "Scan to open on phone";
-        qrcodeDiv.appendChild(msg);
+        qrStatus.innerHTML = `<span class="text-zinc-500">SCAN TO OPEN ON PHONE</span>`;
     } else {
         setupP2PTransfer();
     }
 }
-
-// Fixed WhatsApp Shortener (With strict limit check & persistent success UI)
-shortenLinkBtn.addEventListener('click', async () => {
-    const longUrl = window.location.href;
-    if (longUrl.length > SHORTEN_LIMIT) return; // Hard block 
-    
-    shortenLinkBtn.innerHTML = `<span class="animate-pulse">Shortening...</span>`;
-    
-    try {
-        const targetUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-        const res = await fetch(proxyUrl);
-        
-        if (res.ok) {
-            const shortUrl = await res.text();
-            shareUrlInput.value = shortUrl;
-            
-            // Auto copy to clipboard seamlessly
-            navigator.clipboard.writeText(shortUrl);
-            
-            // Change button to green success state (No Auto-Hide)
-            shortenLinkBtn.classList.remove('bg-zinc-800', 'text-zinc-300', 'hover:bg-zinc-700');
-            shortenLinkBtn.classList.add('bg-green-600', 'text-white', 'pointer-events-none');
-            shortenLinkBtn.innerHTML = "✅ Shortened & Copied!";
-            urlWarning.classList.add('hidden');
-        } else throw new Error();
-    } catch (e) {
-        shortenLinkBtn.innerHTML = "❌ Failed. Network Error.";
-        setTimeout(() => shortenLinkBtn.innerHTML = "Shorten Link (For WhatsApp)", 3000);
-    }
-});
 
 function setupP2PTransfer() {
     if (currentPeer) { currentPeer.destroy(); currentPeer = null; }
     const p2pId = 'sp-' + Math.random().toString(36).substring(2, 10);
     const shortUrl = `${window.location.origin}${window.location.pathname}#p2p=${p2pId}`;
 
-    qrcodeDiv.innerHTML = `<div class="text-zinc-400 text-xs animate-pulse mb-2">Creating Secure Room...</div>`;
+    qrcodeDiv.innerHTML = `<div class="text-zinc-400 text-xs animate-pulse flex h-full items-center">Creating Room...</div>`;
+    qrStatus.innerHTML = `<span class="animate-pulse">INITIALIZING P2P...</span>`;
 
     try {
         currentPeer = new window.Peer(p2pId);
         currentPeer.on('open', () => {
             qrcodeDiv.innerHTML = "";
             new window.QRCode(qrcodeDiv, { text: shortUrl, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: window.QRCode.CorrectLevel.L });
-            const msg = document.createElement("div");
-            msg.className = "text-[11px] text-blue-500 mt-2 text-center font-medium border-t border-zinc-100 pt-1 w-full flex flex-col";
-            msg.innerHTML = `<span class="font-bold">LIVE P2P SYNC</span><span class="text-zinc-500 text-[9px]">Keep tab open while scanning</span>`;
-            qrcodeDiv.appendChild(msg);
+            
+            // Sleek green pulsing aesthetic for the text label *outside* the white box
+            qrStatus.innerHTML = `<div class="flex flex-col items-center gap-1">
+                <span class="text-green-500/90 font-bold flex items-center gap-2">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    LIVE P2P SYNC
+                </span>
+                <span class="text-[8px] text-zinc-500">KEEP TAB OPEN WHILE SCANNING</span>
+            </div>`;
         });
         currentPeer.on('connection', (conn) => {
             conn.on('open', () => {
-                qrcodeDiv.innerHTML = `<div class="text-green-500 font-bold text-sm mt-10">Transferred to Device!</div>`;
+                qrcodeDiv.innerHTML = `<div class="text-green-500 font-bold text-sm flex h-full items-center">Transferred!</div>`;
+                qrStatus.innerHTML = `<span>TRANSFER COMPLETE</span>`;
                 conn.send({ text: editor.value });
                 setTimeout(() => { if (currentPeer) currentPeer.destroy(); currentPeer = null; }, 2500);
             });
         });
-    } catch (e) {}
+    } catch (e) {
+        qrcodeDiv.innerHTML = `<div class="text-red-500 text-xs flex h-full items-center">P2P Error</div>`;
+        qrStatus.innerHTML = `<span>FALLBACK TO COPY URL</span>`;
+    }
 }
 
 function receiveP2P(p2pId) {
@@ -358,20 +325,17 @@ editor.addEventListener('keydown', (e) => {
     }
 });
 
-// Fixed Downloads (Applies .py, .java, .js etc)
+// Always download strictly as SharePaste.txt
 if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
         const text = editor.value;
         if (!text.trim()) return;
         
-        const extMap = { python: 'py', java: 'java', javascript: 'js', cpp: 'cpp', html: 'html', css: 'css', text: 'txt' };
-        const extension = extMap[detectLanguage(text)] || 'txt';
-        
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `SharePaste.${extension}`; 
+        a.download = `SharePaste.txt`; 
         document.body.appendChild(a); 
         a.click(); 
         document.body.removeChild(a);
@@ -383,19 +347,27 @@ if (sendBtn) sendBtn.addEventListener('click', openShareMenu);
 
 if (closeShare) closeShare.addEventListener('click', () => { shareModal.classList.add('hidden'); if(currentPeer) currentPeer.destroy(); });
 if (shareModal) shareModal.addEventListener('click', (e) => { if (e.target === shareModal) { shareModal.classList.add('hidden'); if(currentPeer) currentPeer.destroy(); }});
-if (modalCopyBtn) modalCopyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(shareUrlInput.value).then(() => {
-        modalCopyBtn.innerText = "Copied!"; modalCopyBtn.classList.add("text-green-400");
-        setTimeout(() => { modalCopyBtn.innerText = "Copy"; modalCopyBtn.classList.remove("text-green-400"); }, 2000);
+
+if (modalCopyBtn) {
+    modalCopyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+            modalCopyBtn.innerText = "Copied!"; 
+            modalCopyBtn.classList.remove("bg-zinc-800", "text-white");
+            modalCopyBtn.classList.add("bg-green-100", "text-green-800");
+            setTimeout(() => { 
+                modalCopyBtn.innerText = "Copy"; 
+                modalCopyBtn.classList.remove("bg-green-100", "text-green-800");
+                modalCopyBtn.classList.add("bg-zinc-800", "text-white");
+            }, 2000);
+        });
     });
-});
+}
 
 const aboutBtn = document.getElementById('about-btn'), aboutModal = document.getElementById('about-modal'), closeAbout = document.getElementById('close-about');
 if (aboutBtn) aboutBtn.addEventListener('click', () => aboutModal.classList.remove('hidden'));
 if (closeAbout) closeAbout.addEventListener('click', () => aboutModal.classList.add('hidden'));
 if (aboutModal) aboutModal.addEventListener('click', (e) => { if (e.target === aboutModal) aboutModal.classList.add('hidden'); });
 
-// Restored Snow Logic
 const snowBtn = document.getElementById('snow-btn');
 const snowText = document.getElementById('snow-text');
 const snowContainer = document.getElementById('snow-container');
