@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Share | Paste</title>
+    <title>SharePaste | Serverless Snippets</title>
+    
+    <meta property="og:title" content="SharePaste | Code Snippet">
+    <meta property="og:description" content="A blazing fast, serverless tool to share code securely. No databases, zero limits.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#22c55e">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link id="prism-theme" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
@@ -29,7 +33,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                 <span class="hidden md:inline">GitHub</span>
             </a>
-
+            
             <button id="snow-btn" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
                 <span class="text-lg leading-none">❅</span> 
                 <span id="snow-text" class="hidden md:inline">Snow</span>
@@ -42,35 +46,61 @@
 
             <button id="send-btn" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                <span>Share</span>
+                <span>Send</span>
             </button>
         </nav>
     </header>
 
-    <main class="flex-1 relative w-[95%] md:w-[85%] max-w-7xl mx-auto flex flex-col overflow-hidden my-2 md:my-10 border-x border-zinc-800/30">
-        <div class="editor-container">
+    <main class="flex-1 relative w-[95%] md:w-[85%] max-w-7xl mx-auto flex flex-col overflow-hidden my-2 md:my-8 border border-zinc-800/50 md:rounded-xl shadow-2xl transition-all duration-300">
+        
+        <div class="editor-container group" id="editor-container">
+            
+            <div class="absolute top-3 right-4 z-40 flex items-center gap-1 bg-[#18181b]/80 backdrop-blur-md border border-zinc-700/50 rounded-lg p-1 shadow-2xl transition-all duration-300 opacity-80 md:opacity-30 md:hover:opacity-100 md:group-hover:opacity-100">
+                <button id="tb-copy" class="toolbar-btn" title="Copy Code">
+                    <svg id="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+                
+                <button id="tb-lock" class="toolbar-btn" title="Toggle Read-Only">
+                    <svg id="icon-lock" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </button>
+                
+                <div class="w-px h-4 bg-zinc-700/50 mx-1"></div>
+                
+                <button id="tb-lines" class="toolbar-btn font-bold" title="Toggle Lines">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+                </button>
+                
+                <button id="tb-theme" class="toolbar-btn" title="Change Theme">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                </button>
+                
+                <div class="w-px h-4 bg-zinc-700/50 mx-1"></div>
+                
+                <button id="tb-expand" class="toolbar-btn" title="Fullscreen">
+                    <svg id="icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                </button>
+            </div>
+
             <div id="line-numbers">1</div>
+            
             <div id="code-wrapper">
                 <pre id="highlighting" aria-hidden="true"><code class="language-js" id="code-content"></code></pre>
-                <textarea id="editor" placeholder="// Paste or write your code here..." spellcheck="false"></textarea>
+                <textarea id="editor" placeholder="// Write or paste something massive..." spellcheck="false"></textarea>
             </div>
-            <button id="lock-btn" class="absolute top-4 right-4 z-20 text-zinc-400 hover:text-white transition-colors p-2 rounded-lg opacity-50 hover:opacity-100" title="Toggle Read-Only Lock">
-                <svg id="lock-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-            </button>
+            
         </div>
-        <div class="absolute bottom-6 right-6 pointer-events-none z-20">
-            <div id="stats" class="text-[10px] uppercase tracking-widest text-zinc-600 bg-[#050505] border border-zinc-800 px-2 py-1 opacity-50">
+        
+        <div class="absolute bottom-4 right-4 pointer-events-none z-20">
+            <div id="stats" class="text-[10px] uppercase tracking-widest text-zinc-400 bg-[#050505]/80 backdrop-blur border border-zinc-800 px-2 py-1 rounded shadow-lg">
                 0 lines
             </div>
         </div>
+
         <div id="snow-container"></div>
     </main>
 
     <div id="share-modal" class="modal-bg hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="bg-[#09090b] border border-zinc-800 p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-6 w-[90%] max-w-sm relative">
+        <div class="bg-[#09090b] border border-zinc-800 p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-5 w-[90%] max-w-sm relative">
             <button id="close-share" class="absolute top-4 right-4 text-zinc-500 hover:text-white">✕</button>
             <h3 class="text-white font-medium tracking-wide">Share Snippet</h3>
             
@@ -78,10 +108,16 @@
             
             <div class="w-full h-px bg-zinc-800/50"></div>
             
+            <div id="url-warning" class="hidden text-[10px] text-yellow-500 text-center px-4 -mt-2 leading-relaxed"></div>
+
             <div class="w-full flex gap-2">
                 <input id="share-url" readonly class="flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-[11px] text-zinc-400 focus:outline-none font-mono truncate" value="">
                 <button id="modal-copy-btn" class="bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-2 rounded text-xs transition-colors font-medium min-w-[60px]">Copy</button>
             </div>
+            
+            <button id="shorten-link-btn" class="hidden w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 py-2 rounded text-[11px] uppercase tracking-wider font-medium transition-colors">
+                Shorten Link (For WhatsApp)
+            </button>
         </div>
     </div>
 
@@ -120,7 +156,7 @@
 
                 <div class="flex gap-4">
                     <div class="h-10 w-10 shrink-0 rounded-lg bg-zinc-900/50 border border-zinc-800 flex items-center justify-center">
-                        <svg class="text-purple-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        <svg class="text-purple-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                     </div>
                     <div>
                         <h4 class="text-white font-medium text-sm">Live P2P Sync</h4>
