@@ -1,4 +1,5 @@
-/* * SharePaste - Main Stylesheet 
+/* 
+ * SharePaste - Main Stylesheet 
  * Handles editor layering, transparency, and modal animations.
  */
 
@@ -17,8 +18,13 @@
 
 /* --- UTILITIES --- */
 /* Hide scrollbars for a cleaner, modern look */
-* { scrollbar-width: none; -ms-overflow-style: none; }
-*::-webkit-scrollbar { display: none; }
+* { 
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+*::-webkit-scrollbar { 
+    display: none; 
+}
 
 body { 
     font-family: 'Inter', sans-serif; 
@@ -64,6 +70,9 @@ pre[class*="language-"], code[class*="language-"] {
     background: transparent; 
     color: #52525b; /* Zinc-600 */
     overflow: hidden; 
+    
+    /* IMPORTANT: Required for fast line numbers via textContent */
+    white-space: pre; 
     
     user-select: none;
     pointer-events: none;
@@ -112,8 +121,15 @@ pre[class*="language-"], code[class*="language-"] {
 
 /* --- Z-INDEX LAYERING --- */
 /* Bottom Layer: Visible Syntax Highlighting */
-#highlighting { z-index: 0; pointer-events: none; }
-#highlighting code { padding: 0 !important; margin: 0 !important; display: block; }
+#highlighting { 
+    z-index: 0; 
+    pointer-events: none; 
+}
+#highlighting code { 
+    padding: 0 !important; 
+    margin: 0 !important; 
+    display: block; 
+}
 
 /* Top Layer: Invisible Textarea for Typing */
 #editor {
@@ -124,7 +140,10 @@ pre[class*="language-"], code[class*="language-"] {
     resize: none;
 }
 #editor:focus { outline: none; }
-#editor::selection { background: rgba(34, 197, 94, 0.2); color: transparent; }
+#editor::selection { 
+    background: rgba(34, 197, 94, 0.2); 
+    color: transparent; 
+}
 
 /* --- ANIMATIONS --- */
 .modal-bg { transition: opacity 0.2s ease-in-out; }
