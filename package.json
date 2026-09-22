@@ -1,0 +1,27 @@
+{
+  "name": "sharepaste",
+  "version": "1.0.0",
+  "description": "High-performance serverless code and text sharing tool using Zstandard compression.",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "lint:prettier": "prettier --check .",
+    "lint:html": "htmlhint index.html",
+    "lint": "npm run lint:prettier && npm run lint:html",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "serverless",
+    "pastebin",
+    "zstandard",
+    "wasm",
+    "code-sharing",
+    "qr-code"
+  ],
+  "author": "Siddharth Bhadu",
+  "license": "MIT",
+  "devDependencies": {
+    "htmlhint": "^1.1.4",
+    "prettier": "^3.3.3"
+  }
+}

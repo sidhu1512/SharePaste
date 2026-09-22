@@ -2,332 +2,395 @@
  * SharePaste - Main Stylesheet 
  */
 :root {
-    --editor-font: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
-    --editor-size: 14px;
-    --editor-line-height: 24px;
-    --editor-padding: 20px;
-    --line-num-width: 44px; 
+  --editor-font: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+  --editor-size: 14px;
+  --editor-line-height: 24px;
+  --editor-padding: 20px;
+  --line-num-width: 44px;
 }
 
 @media (min-width: 768px) {
-    :root { --editor-padding: 28px; }
+  :root {
+    --editor-padding: 28px;
+  }
 }
 
 /* --- GOOGLE MINIMAL SCROLLBARS --- */
 * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.18);
-    border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.32);
+  background-color: rgba(255, 255, 255, 0.32);
 }
 
 /* Hide scrollbar on specific overlapping layers to prevent ugly double-scrollbars */
-#highlighting, #line-numbers {
-    scrollbar-width: none;
+#highlighting,
+#line-numbers {
+  scrollbar-width: none;
 }
-#highlighting::-webkit-scrollbar, #line-numbers::-webkit-scrollbar {
-    display: none;
+#highlighting::-webkit-scrollbar,
+#line-numbers::-webkit-scrollbar {
+  display: none;
 }
 
-body { 
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-    background-color: #050505;
-    color: #a1a1aa;
-    overflow-x: hidden;
+body {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  background-color: #050505;
+  color: #a1a1aa;
+  overflow-x: hidden;
 }
 
 /* --- EDITOR CONTAINER --- */
 .editor-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #1e1e22;
-    transition: background 0.3s ease;
-    display: flex; 
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1e1e22;
+  transition: background 0.3s ease;
+  display: flex;
 }
 
 /* FULLSCREEN OVERRIDES */
 .editor-container.is-fullscreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 99999 !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    border: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  border: none !important;
 }
 
 /* --- HIDE LINES LOGIC --- */
-.editor-container.hide-lines #line-numbers { display: none !important; }
-.editor-container.hide-lines #editor, 
-.editor-container.hide-lines #highlighting { padding-left: var(--editor-padding) !important; }
+.editor-container.hide-lines #line-numbers {
+  display: none !important;
+}
+.editor-container.hide-lines #editor,
+.editor-container.hide-lines #highlighting {
+  padding-left: var(--editor-padding) !important;
+}
 
 /* --- WORD WRAP LOGIC --- */
-.editor-container.is-wrapped #editor, 
-.editor-container.is-wrapped #highlighting { 
-    white-space: pre-wrap !important; 
-    word-break: break-word !important; 
+.editor-container.is-wrapped #editor,
+.editor-container.is-wrapped #highlighting {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
 }
 
 /* --- EXPANDABLE FLOATING TOOLBAR --- */
 #floating-toolbar {
-    transition: opacity 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 #tb-tools {
-    min-width: 0;
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-    transition: max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
-    white-space: nowrap;
+  min-width: 0;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.22s ease;
+  white-space: nowrap;
 }
 
 #floating-toolbar:hover #tb-tools,
 #floating-toolbar:focus-within #tb-tools,
 #floating-toolbar.is-open #tb-tools {
-    max-width: 500px;
-    opacity: 1;
-    pointer-events: auto;
-    overflow: visible;
+  max-width: 500px;
+  opacity: 1;
+  pointer-events: auto;
+  overflow: visible;
 }
 
 #floating-toolbar.is-open {
-    opacity: 1 !important;
-    border-color: rgba(161, 161, 170, 0.4) !important;
+  opacity: 1 !important;
+  border-color: rgba(161, 161, 170, 0.4) !important;
 }
 
 #floating-toolbar:hover #tb-toggle,
 #floating-toolbar.is-open #tb-toggle {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 /* --- EXPANDABLE STATUS BAR --- */
 #status-bar {
-    transition: opacity 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 #stats-content {
-    min-width: 0;
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-    transition: max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
-    white-space: nowrap;
+  min-width: 0;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.22s ease;
+  white-space: nowrap;
 }
 
 #status-bar:hover #stats-content,
 #status-bar:focus-within #stats-content,
 #status-bar.is-open #stats-content {
-    max-width: 450px;
-    opacity: 1;
-    pointer-events: auto;
-    overflow: visible;
+  max-width: 450px;
+  opacity: 1;
+  pointer-events: auto;
+  overflow: visible;
 }
 
 #status-bar.is-open {
-    opacity: 1 !important;
-    border-color: rgba(161, 161, 170, 0.4) !important;
+  opacity: 1 !important;
+  border-color: rgba(161, 161, 170, 0.4) !important;
 }
 
 #status-bar:hover #status-icon,
 #status-bar.is-open #status-icon {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 /* --- TOOLBAR BUTTONS --- */
 .toolbar-btn {
-    color: #a1a1aa;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 30px;
-    height: 30px;
-    user-select: none;
+  color: #a1a1aa;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  user-select: none;
 }
-.toolbar-btn:hover { background-color: rgba(255, 255, 255, 0.12); color: #ffffff; }
-.toolbar-btn.active { background-color: rgba(255, 255, 255, 0.22); color: #ffffff; }
+.toolbar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+.toolbar-btn.active {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
 
 /* --- PRISM OVERRIDES --- */
-pre[class*="language-"], code[class*="language-"] {
-    background: transparent !important;
-    text-shadow: none !important;
+pre[class*='language-'],
+code[class*='language-'] {
+  background: transparent !important;
+  text-shadow: none !important;
 }
 
 /* --- LEFT COLUMN: LINE NUMBERS --- */
 #line-numbers {
-    position: relative; 
-    flex-shrink: 0;    
-    width: calc(var(--editor-padding) + var(--line-num-width));
-    padding-top: var(--editor-padding); 
-    padding-bottom: 60vh; 
-    padding-right: 14px;
-    text-align: right;
-    background: rgba(0,0,0,0.15); 
-    color: #52525b; 
-    overflow: hidden; 
-    white-space: pre; 
-    user-select: none;
-    pointer-events: none;
-    z-index: 10;
-    font-size: var(--editor-size) !important;
-    line-height: var(--editor-line-height) !important;
+  position: relative;
+  flex-shrink: 0;
+  width: calc(var(--editor-padding) + var(--line-num-width));
+  padding-top: var(--editor-padding);
+  padding-bottom: 60vh;
+  padding-right: 14px;
+  text-align: right;
+  background: rgba(0, 0, 0, 0.15);
+  color: #52525b;
+  overflow: hidden;
+  white-space: pre;
+  user-select: none;
+  pointer-events: none;
+  z-index: 10;
+  font-size: var(--editor-size) !important;
+  line-height: var(--editor-line-height) !important;
 }
 
 /* --- RIGHT COLUMN: CODE WRAPPER --- */
 #code-wrapper {
-    position: relative;
-    flex-grow: 1; 
-    height: 100%;
-    overflow: hidden; 
+  position: relative;
+  flex-grow: 1;
+  height: 100%;
+  overflow: hidden;
 }
 
 /* --- CORE EDITOR TYPOGRAPHY --- */
-#editor, #highlighting, #highlighting code, #line-numbers {
-    font-family: var(--editor-font) !important;
-    font-size: var(--editor-size) !important;
-    line-height: var(--editor-line-height) !important;
-    tab-size: 4 !important;
-    font-variant-ligatures: none;
-    -webkit-font-smoothing: antialiased;
-    letter-spacing: 0px;
+#editor,
+#highlighting,
+#highlighting code,
+#line-numbers {
+  font-family: var(--editor-font) !important;
+  font-size: var(--editor-size) !important;
+  line-height: var(--editor-line-height) !important;
+  tab-size: 4 !important;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0px;
 }
 
-#editor, #highlighting {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    margin: 0 !important; border: 0 !important; box-sizing: border-box;
-    padding-top: var(--editor-padding) !important; 
-    padding-left: 0 !important; 
-    padding-right: var(--editor-padding) !important;
-    padding-bottom: 60vh !important;
-    overflow: auto; 
-    white-space: pre; 
+#editor,
+#highlighting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  border: 0 !important;
+  box-sizing: border-box;
+  padding-top: var(--editor-padding) !important;
+  padding-left: 0 !important;
+  padding-right: var(--editor-padding) !important;
+  padding-bottom: 60vh !important;
+  overflow: auto;
+  white-space: pre;
 }
 
-#highlighting { z-index: 0; pointer-events: none; }
-#highlighting code { padding: 0 !important; margin: 0 !important; display: block; }
+#highlighting {
+  z-index: 0;
+  pointer-events: none;
+}
+#highlighting code {
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block;
+}
 
 #editor {
-    z-index: 1;
-    color: transparent;
-    background: transparent;
-    caret-color: #ffffff;
-    resize: none;
+  z-index: 1;
+  color: transparent;
+  background: transparent;
+  caret-color: #ffffff;
+  resize: none;
 }
-#editor:focus { outline: none; }
-#editor::selection { background: rgba(255, 255, 255, 0.22); color: transparent; }
+#editor:focus {
+  outline: none;
+}
+#editor::selection {
+  background: rgba(255, 255, 255, 0.22);
+  color: transparent;
+}
 
 /* MODALS & POPUPS */
-.modal-bg { transition: opacity 0.2s ease-in-out; }
-.modal-bg.hidden { opacity: 0; pointer-events: none; }
-.modal-bg:not(.hidden) { opacity: 1; pointer-events: auto; }
+.modal-bg {
+  transition: opacity 0.2s ease-in-out;
+}
+.modal-bg.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.modal-bg:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 /* --- AUTOCLOSE QR POPUP (PFA) --- */
 #share-popup:not(.hidden) {
-    animation: popup-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: popup-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes popup-fade-in {
-    0% {
-        opacity: 0;
-        transform: translateY(-8px) scale(0.96);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Mobile responsive centering for the QR popup */
 @media (max-width: 767px) {
-    #share-popup {
-        top: 50% !important;
-        left: 50% !important;
-        right: auto !important;
-        transform: translate(-50%, -50%) !important;
+  #share-popup {
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+  }
+  #share-popup:not(.hidden) {
+    animation: popup-fade-in-mobile 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+  @keyframes popup-fade-in-mobile {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% - 10px)) scale(0.95);
     }
-    #share-popup:not(.hidden) {
-        animation: popup-fade-in-mobile 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
-    @keyframes popup-fade-in-mobile {
-        0% {
-            opacity: 0;
-            transform: translate(-50%, calc(-50% - 10px)) scale(0.95);
-        }
-        100% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-    }
+  }
 }
 
 /* Feedback tooltip near share button */
 #share-copied-tooltip:not(.hidden) {
-    animation: tooltip-fade-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: tooltip-fade-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes tooltip-fade-in {
-    0% {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 #qrcode {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#qrcode canvas, #qrcode img {
-    display: block !important;
-    margin: 0 auto;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+#qrcode canvas,
+#qrcode img {
+  display: block !important;
+  margin: 0 auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 /* --- DRAG & DROP OVERLAY --- */
 body.is-dragging #drop-overlay {
-    opacity: 1;
-    pointer-events: auto;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* --- SNOW ANIMATION --- */
 .snowflake {
-    position: fixed;
-    top: -20px;
-    color: white;
-    user-select: none;
-    pointer-events: none; 
-    z-index: 50; 
-    animation-name: fall;
-    animation-timing-function: linear;
+  position: fixed;
+  top: -20px;
+  color: white;
+  user-select: none;
+  pointer-events: none;
+  z-index: 50;
+  animation-name: fall;
+  animation-timing-function: linear;
 }
 
 @keyframes fall {
-    to { transform: translateY(105vh); }
+  to {
+    transform: translateY(105vh);
+  }
 }

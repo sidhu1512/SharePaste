@@ -1,0 +1,6 @@
+node_modules/
+package-lock.json
+zstd.js
+*.wasm
+docs/screenshots/
+.github/
