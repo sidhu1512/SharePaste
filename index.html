@@ -5,173 +5,313 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SharePaste | Serverless Snippets</title>
     
-    <meta property="og:title" content="SharePaste | Code Snippet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Crect width='32' height='32' rx='8' fill='%23050505'/%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='none' stroke='%2327272a' stroke-width='1'/%3E%3Cpath d='M11 11L6 16L11 21' fill='none' stroke='%23e4e4e7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M21 11L26 16L21 21' fill='none' stroke='%23e4e4e7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='18' y1='9' x2='14' y2='23' stroke='%2371717a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="alternate icon" href="./favicon.svg?v=5">
+    <meta name="description" content="A blazing fast, serverless code & text sharing tool. Pure client-side Zstandard compression, zero database, zero limits.">
+    <meta property="og:title" content="SharePaste | Serverless Snippets">
     <meta property="og:description" content="A blazing fast, serverless tool to share code securely. No databases, zero limits.">
     <meta property="og:type" content="website">
-    <meta name="theme-color" content="#22c55e">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SharePaste | Serverless Snippets">
+    <meta name="twitter:description" content="A blazing fast, serverless tool to share code securely. No databases, zero limits.">
+    <meta name="theme-color" content="#050505">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     
     <link id="prism-theme" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
-<body class="h-screen w-screen flex flex-col selection:bg-green-900 selection:text-white bg-[#050505]">
+<body class="h-screen w-screen flex flex-col selection:bg-zinc-800 selection:text-white bg-[#050505]">
 
-    <header class="w-full flex justify-between items-center px-4 md:px-8 py-3 md:py-6 border-b border-zinc-800 bg-[#050505]/90 backdrop-blur-sm z-30">
-        <div class="text-zinc-500 text-xs tracking-widest font-mono hidden sm:block">SHARE PASTE</div>
+    <!-- Top Navigation Header -->
+    <header class="w-full flex justify-between items-center px-4 md:px-8 py-3 md:py-4 border-b border-zinc-800/80 bg-[#050505]/95 backdrop-blur-md z-30">
+        <div class="flex items-center gap-3">
+            <div id="brand-link" class="flex items-center gap-2 select-none cursor-default">
+                <div class="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                    <span class="text-zinc-200 font-mono text-xs font-bold">&lt;/&gt;</span>
+                </div>
+                <span class="text-zinc-300 text-xs tracking-widest font-mono font-semibold hidden sm:inline">SHARE PASTE</span>
+            </div>
+        </div>
         
-        <nav class="flex items-center gap-3 md:gap-6 text-xs md:text-sm font-medium w-full sm:w-auto justify-between sm:justify-end">
-            <button id="about-btn" class="text-zinc-400 hover:text-white transition-colors">About</button>
+        <nav class="flex items-center gap-1.5 sm:gap-2 text-xs md:text-sm font-medium w-full sm:w-auto justify-between sm:justify-end">
+            <!-- + Icon: Open New Tab -->
+            <a id="new-btn" href="./" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-zinc-800/60 flex items-center justify-center cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </a>
 
-            <a href="https://github.com/sidhu1512/SharePaste" target="_blank" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                <span class="hidden md:inline">GitHub</span>
+            <!-- About Button (Info Icon) -->
+            <button id="about-btn" class="text-zinc-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-zinc-800/60 flex items-center justify-center cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+
+            <!-- GitHub Link -->
+            <a href="https://github.com/sidhu1512/SharePaste" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-zinc-800/60 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
             </a>
             
-            <button id="snow-btn" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
-                <span class="text-lg leading-none">❅</span> 
-                <span id="snow-text" class="hidden md:inline">Snow</span>
+            <!-- Snow Toggle -->
+            <button id="snow-btn" class="text-zinc-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-zinc-800/60 flex items-center justify-center cursor-pointer">
+                <span class="text-lg leading-none">❅</span>
             </button>
 
-            <button id="download-btn" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span class="hidden md:inline">Download</span>
+            <!-- Download Button (dimmed & disabled when empty) -->
+            <button id="download-btn" disabled class="text-zinc-400 opacity-30 cursor-not-allowed pointer-events-none transition-all duration-200 p-2 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             </button>
 
-            <button id="send-btn" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                <span>Share</span>
-            </button>
+            <!-- Share Button (dimmed & disabled when empty) -->
+            <div class="relative flex items-center">
+                <button id="send-btn" disabled class="text-zinc-400 opacity-30 cursor-not-allowed pointer-events-none transition-all duration-200 p-2 rounded-lg flex items-center justify-center">
+                    <svg id="send-btn-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+                <!-- Small message near share icon on copy -->
+                <div id="share-copied-tooltip" class="pointer-events-none absolute right-0 top-full mt-1.5 hidden items-center gap-1.5 px-2.5 py-1 bg-[#18181b] border border-zinc-700/80 text-zinc-200 text-xs font-mono rounded-lg shadow-2xl whitespace-nowrap z-50">
+                    <svg class="text-zinc-400 w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Copied!</span>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <main class="flex-1 relative w-[95%] md:w-[85%] max-w-7xl mx-auto flex flex-col overflow-hidden my-2 md:my-8 border border-zinc-800/50 md:rounded-xl shadow-2xl transition-all duration-300">
+    <!-- Main Editor Section -->
+    <main class="flex-1 relative w-[95%] md:w-[88%] max-w-7xl mx-auto flex flex-col overflow-hidden my-2 md:my-6 border border-zinc-800/60 md:rounded-2xl shadow-2xl transition-all duration-300">
         
         <div class="editor-container group" id="editor-container">
             
-            <div class="absolute top-3 right-4 z-40 flex items-center gap-1 bg-[#18181b]/80 backdrop-blur-md border border-zinc-700/50 rounded-lg p-1 shadow-2xl transition-all duration-300 opacity-80 md:opacity-30 md:hover:opacity-100 md:group-hover:opacity-100">
-                <button id="tb-copy" class="toolbar-btn" title="Copy Code">
-                    <svg id="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                </button>
-                
-                <button id="tb-lock" class="toolbar-btn" title="Toggle Read-Only">
-                    <svg id="icon-lock" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                </button>
-                
-                <div class="w-px h-4 bg-zinc-700/50 mx-1"></div>
-                
-                <button id="tb-lines" class="toolbar-btn font-bold" title="Toggle Lines">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
-                </button>
-                
-                <button id="tb-theme" class="toolbar-btn" title="Change Theme">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-                </button>
-                
-                <div class="w-px h-4 bg-zinc-700/50 mx-1"></div>
-                
-                <button id="tb-expand" class="toolbar-btn" title="Fullscreen">
-                    <svg id="icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+            <!-- Floating Toolbar: Collapsible single-icon pill with matching opacity, lits and expands on hover -->
+            <div id="floating-toolbar" class="group/tb absolute top-3 right-4 z-40 flex items-center bg-[#18181b]/85 backdrop-blur-md border border-zinc-700/50 hover:border-zinc-600/80 rounded-lg p-1 shadow-2xl transition-all duration-300 opacity-40 hover:opacity-100">
+                <!-- Collapsible Tools Container (Hidden/collapsed until hovered or open) -->
+                <div id="tb-tools" class="flex items-center gap-1">
+                    <!-- Copy Code -->
+                    <button id="tb-copy" class="toolbar-btn">
+                        <svg id="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                    
+                    <!-- Language Selector Pill -->
+                    <div class="relative">
+                        <button id="tb-lang" class="toolbar-btn px-2 w-auto gap-1 text-[11px] font-mono">
+                            <span id="lang-label">Auto</span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <!-- Language Dropdown Menu -->
+                        <div id="lang-dropdown" class="hidden absolute right-0 top-full mt-1.5 w-36 bg-[#16161a] border border-zinc-800 rounded-xl shadow-2xl py-1.5 z-50 max-h-64 overflow-y-auto text-xs font-mono">
+                            <div class="px-2 py-1 text-[10px] text-zinc-500 uppercase tracking-wider">Syntax Highlighting</div>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-300 hover:text-white flex items-center justify-between" data-lang="auto">Auto-Detect</button>
+                            <div class="h-px bg-zinc-800 my-1"></div>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="javascript">JavaScript</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="typescript">TypeScript</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="python">Python</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="markup">HTML / XML</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="css">CSS</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="cpp">C / C++</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="java">Java</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="rust">Rust</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="go">Go</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="json">JSON</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="sql">SQL</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="markdown">Markdown</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="bash">Bash / Shell</button>
+                            <button class="lang-option w-full text-left px-3 py-1.5 hover:bg-zinc-800/80 text-zinc-400 hover:text-white" data-lang="none">Plain Text</button>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Read-Only Lock -->
+                    <button id="tb-lock" class="toolbar-btn">
+                        <svg id="icon-lock" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </button>
+                    
+                    <div class="w-px h-4 bg-zinc-700/50 mx-0.5"></div>
+                    
+                    <!-- Toggle Line Numbers -->
+                    <button id="tb-lines" class="toolbar-btn font-bold">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+                    </button>
+
+                    <!-- Toggle Word Wrap -->
+                    <button id="tb-wrap" class="toolbar-btn font-bold">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><path d="M3 12h15a3 3 0 1 1 0 6h-4"></path><polyline points="16 16 14 18 16 20"></polyline><line x1="3" y1="18" x2="9" y2="18"></line></svg>
+                    </button>
+                    
+                    <!-- Theme Switcher -->
+                    <button id="tb-theme" class="toolbar-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                    </button>
+                    
+                    <div class="w-px h-4 bg-zinc-700/50 mx-0.5"></div>
+                    
+                    <!-- Fullscreen Toggle -->
+                    <button id="tb-expand" class="toolbar-btn">
+                        <svg id="icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                    </button>
+
+                    <div class="w-px h-4 bg-zinc-700/50 mx-0.5"></div>
+                </div>
+
+                <!-- Single Trigger Icon: Always visible, lits up on hover, acts as handle -->
+                <button id="tb-toggle" class="toolbar-btn text-zinc-400 group-hover/tb:text-white transition-colors flex-shrink-0 cursor-pointer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
                 </button>
             </div>
 
+            <!-- Left: Line Numbers -->
             <div id="line-numbers">1</div>
             
+            <!-- Right: Code and Editor Wrapper -->
             <div id="code-wrapper">
-                <pre id="highlighting" aria-hidden="true"><code class="language-js" id="code-content"></code></pre>
-                <textarea id="editor" placeholder="// Write or paste something massive..." spellcheck="false"></textarea>
+                <pre id="highlighting" aria-hidden="true"><code class="language-javascript" id="code-content"></code></pre>
+                <textarea id="editor" placeholder="// Write or paste something massive... (or drag & drop a file)" spellcheck="false"></textarea>
             </div>
             
+            <!-- Drag and Drop Overlay Indicator -->
+            <div id="drop-overlay" class="absolute inset-0 z-50 bg-[#050505]/85 border-2 border-dashed border-zinc-600/60 rounded-xl flex flex-col items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d4d4d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-3 animate-bounce"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <div class="text-white text-sm font-semibold tracking-wide">Drop file here</div>
+                <div class="text-zinc-400 text-xs mt-1">Load code and auto-detect language</div>
+            </div>
         </div>
         
-        <div class="absolute bottom-4 right-4 pointer-events-none z-20">
-            <div id="stats" class="text-[10px] uppercase tracking-widest text-zinc-400 bg-[#050505]/80 backdrop-blur border border-zinc-800 px-2 py-1 rounded shadow-lg">
-                0 lines
+        <!-- Expandable Status Bar: Single icon when idle, expands on hover with matching opacity function -->
+        <div class="absolute bottom-4 right-4 z-20">
+            <div id="status-bar" class="group/sb flex items-center bg-[#050505]/85 backdrop-blur-md border border-zinc-800/80 hover:border-zinc-700/80 rounded-lg p-1 shadow-lg transition-all duration-300 opacity-40 hover:opacity-100 cursor-pointer select-none">
+                <!-- Collapsed Stats Text Container (Expands on hover) -->
+                <div id="stats-content" class="flex items-center">
+                    <div id="stats" class="text-[10px] tracking-wider font-mono text-zinc-400 whitespace-nowrap pl-2 pr-1.5">
+                        0 LINES · 0 WORDS · 0 CHARS
+                    </div>
+                    <div class="w-px h-3.5 bg-zinc-800/80 mr-1 flex-shrink-0"></div>
+                </div>
+
+                <!-- Status Trigger Icon: Single icon visible when idle, lits up on hover -->
+                <div id="status-icon" class="toolbar-btn text-zinc-400 group-hover/sb:text-white transition-colors flex-shrink-0 cursor-pointer">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
             </div>
         </div>
 
         <div id="snow-container"></div>
     </main>
 
-    <div id="share-modal" class="modal-bg hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="bg-[#09090b] border border-zinc-800 p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-5 w-[90%] max-w-sm relative">
-            <button id="close-share" class="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <!-- Transparent Backdrop for Popup dismiss -->
+    <div id="share-backdrop" class="fixed inset-0 z-40 hidden cursor-default"></div>
+
+    <!-- Dedicated QR Share Popup (Used exclusively when QR code is scannable) -->
+    <div id="share-popup" class="hidden fixed top-16 md:top-20 right-4 md:right-8 z-50 w-[240px] bg-[#16161a] border border-zinc-800/90 rounded-3xl p-3.5 shadow-2xl flex flex-col gap-3 transition-all duration-200 select-none overflow-hidden">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-1 pt-0.5">
+            <span id="share-title" class="text-zinc-400 text-xs font-bold tracking-wider font-mono">SCAN QR</span>
+            <!-- Close icon button -->
+            <button id="close-share" class="text-zinc-400 hover:text-white transition-colors cursor-pointer p-0.5 rounded">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </button>
-            <h3 class="text-white font-medium tracking-wide">Share Snippet</h3>
+        </div>
+
+        <!-- QR Code Container (White rounded card) -->
+        <div id="qr-container" class="bg-white rounded-2xl p-3 flex items-center justify-center shadow-md overflow-hidden aspect-square">
+            <div id="qrcode" class="flex items-center justify-center"></div>
+        </div>
+
+        <!-- Status / Notice -->
+        <div id="qr-status" class="text-[11px] font-mono text-zinc-400 text-center flex items-center justify-center gap-1">
+            <svg class="text-zinc-400 w-3 h-3 inline shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Link copied to clipboard</span>
+        </div>
+
+        <!-- Hidden input for clipboard fallback -->
+        <input id="share-url" type="hidden" readonly value="">
+    </div>
+
+    <!-- Compact About Modal with Opacity Overlay & Autoclose -->
+    <div id="about-modal" class="modal-bg hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div id="about-card" class="bg-[#121215] border border-zinc-800/90 p-5 rounded-2xl shadow-2xl flex flex-col gap-3.5 w-[92%] max-w-[370px] relative select-none">
             
-            <div class="flex flex-col items-center gap-3 w-full">
-                <div class="p-2 bg-white rounded-lg flex items-center justify-center min-h-[196px] min-w-[196px]">
-                    <div id="qrcode"></div>
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <h3 class="text-base font-bold text-white tracking-tight">SharePaste</h3>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">Serverless</span>
                 </div>
-                <div id="qr-status" class="text-[10px] tracking-widest font-mono text-zinc-500 uppercase text-center h-[30px] flex flex-col items-center justify-center"></div>
+                <button id="close-about" class="text-zinc-500 hover:text-white transition-colors cursor-pointer p-1 rounded-md hover:bg-zinc-800/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
-            
-            <div class="w-full h-px bg-zinc-800/50"></div>
-            
-            <div class="w-full flex gap-2">
-                <input id="share-url" readonly class="flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-[11px] text-zinc-400 focus:outline-none font-mono truncate" value="">
-                <button id="modal-copy-btn" class="bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-2 rounded text-xs transition-colors font-medium min-w-[60px]">Copy</button>
+
+            <p class="text-zinc-400 text-xs leading-relaxed">
+                Minimalist code & text sharing. Snippets are compressed and stored entirely in the URL hash.
+            </p>
+
+            <!-- Feature List -->
+            <div class="flex flex-col gap-2.5 border-t border-zinc-800/80 pt-3 text-xs">
+                <div class="flex items-start gap-2.5">
+                    <div class="h-6 w-6 shrink-0 rounded-md bg-zinc-800/70 border border-zinc-700/50 flex items-center justify-center mt-0.5">
+                        <svg class="text-zinc-300" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="text-zinc-200 font-medium text-xs">Serverless & Private</span>
+                        <p class="text-zinc-500 text-[11px] leading-relaxed">Zero database or telemetry. Snippets exist only in your URL hash.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2.5">
+                    <div class="h-6 w-6 shrink-0 rounded-md bg-zinc-800/70 border border-zinc-700/50 flex items-center justify-center mt-0.5">
+                        <svg class="text-zinc-300" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    </div>
+                    <div>
+                        <span class="text-zinc-200 font-medium text-xs">Zstandard Level 19</span>
+                        <p class="text-zinc-500 text-[11px] leading-relaxed">WASM-powered maximum text compression for compact URLs.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2.5">
+                    <div class="h-6 w-6 shrink-0 rounded-md bg-zinc-800/70 border border-zinc-700/50 flex items-center justify-center mt-0.5">
+                        <svg class="text-zinc-300" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    </div>
+                    <div>
+                        <span class="text-zinc-200 font-medium text-xs">Adaptive Sharing</span>
+                        <p class="text-zinc-500 text-[11px] leading-relaxed">Scannable QR for short code; 1-click clipboard copy for large codebases.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2.5">
+                    <div class="h-6 w-6 shrink-0 rounded-md bg-zinc-800/70 border border-zinc-700/50 flex items-center justify-center mt-0.5">
+                        <svg class="text-zinc-300" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="text-zinc-200 font-medium text-xs">Shortcuts</span>
+                        <p class="text-zinc-500 text-[11px] leading-relaxed font-mono">
+                            <span class="text-zinc-400">Ctrl+S</span> Share · <span class="text-zinc-400">Ctrl+Alt+N</span> New · <span class="text-zinc-400">Esc</span> Close
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+                <span>Designed for Developers</span>
+                <a href="https://github.com/sidhu1512/SharePaste" target="_blank" rel="noopener noreferrer" class="hover:text-zinc-300 transition-colors">GitHub ↗</a>
             </div>
         </div>
     </div>
 
-    <div id="about-modal" class="modal-bg hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="bg-[#09090b] border border-zinc-800 p-8 rounded-2xl shadow-2xl flex flex-col gap-6 w-[90%] max-w-[500px] relative max-h-[90vh] overflow-y-auto">
-            
-            <button id="close-about" class="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
 
-            <div>
-                <h3 class="text-white text-2xl font-semibold tracking-tight">About SharePaste</h3>
-                <p class="text-zinc-500 text-sm mt-1">A serverless, secure code sharing tool.</p>
-            </div>
-
-            <div class="space-y-6">
-                <div class="flex gap-4">
-                    <div class="h-10 w-10 shrink-0 rounded-lg bg-zinc-900/50 border border-zinc-800 flex items-center justify-center">
-                        <svg class="text-green-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-medium text-sm">Serverless & Secure</h4>
-                        <p class="text-zinc-500 text-xs leading-relaxed mt-1">No database. Your data is compressed and stored entirely inside the link itself.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-4">
-                    <div class="h-10 w-10 shrink-0 rounded-lg bg-zinc-900/50 border border-zinc-800 flex items-center justify-center">
-                        <svg class="text-blue-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-medium text-sm">Zstandard Compression</h4>
-                        <p class="text-zinc-500 text-xs leading-relaxed mt-1">Powered by WebAssembly (WASM) for lightning-fast, high-ratio text compression.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-4">
-                    <div class="h-10 w-10 shrink-0 rounded-lg bg-zinc-900/50 border border-zinc-800 flex items-center justify-center">
-                        <svg class="text-purple-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-medium text-sm">Live P2P Sync</h4>
-                        <p class="text-zinc-500 text-xs leading-relaxed mt-1">Directly beams massive snippets from PC to Mobile via WebRTC. No limits, no URL shorteners.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pt-2">
-                <div class="h-px w-full bg-zinc-800 mb-6"></div>
-                <p class="text-[10px] text-zinc-600 font-medium tracking-[0.2em] text-center uppercase">Designed for Developers</p>
-            </div>
-        </div>
-    </div>
 
     <script type="module" src="./script.js"></script>
 </body>
