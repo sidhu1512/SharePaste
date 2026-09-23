@@ -15,7 +15,9 @@ A high-performance, minimalist, **serverless** code and text sharing tool. Paste
 
 ## Overview
 
-![SharePaste Overview](docs/screenshots/overview.png)
+<p align="center">
+  <img src="docs/screenshots/overview.png" alt="SharePaste Overview" width="800">
+</p>
 
 SharePaste eliminates backend dependencies and storage limits by treating the client URL hash as the single source of truth. Snippets load instantly and remain accessible indefinitely without expiring on a remote server.
 
