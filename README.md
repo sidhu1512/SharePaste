@@ -1,8 +1,9 @@
 # SharePaste
 
 [![Build Status](https://github.com/sidhu1512/SharePaste/actions/workflows/ci.yml/badge.svg)](https://github.com/sidhu1512/SharePaste/actions/workflows/ci.yml)
-[![Version: 1.0.0](https://img.shields.io/badge/Version-v1.0.0-10b981.svg)](https://github.com/sidhu1512/SharePaste)
+[![Release](https://img.shields.io/github/v/release/sidhu1512/SharePaste?color=10b981&label=Release)](https://github.com/sidhu1512/SharePaste/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-blueviolet.svg)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/sidhu1512/SharePaste?style=social)](https://github.com/sidhu1512/SharePaste/stargazers)
 [![Live Site](https://img.shields.io/badge/Website-Open-emerald.svg)](https://sidhu1512.github.io/SharePaste)
 [![Launch App](https://img.shields.io/badge/Web%20App-Launch-cyan.svg)](https://sidhu1512.github.io/SharePaste/app.html)
