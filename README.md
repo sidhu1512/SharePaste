@@ -1,13 +1,15 @@
 # SharePaste
 
 [![Build Status](https://github.com/sidhu1512/SharePaste/actions/workflows/ci.yml/badge.svg)](https://github.com/sidhu1512/SharePaste/actions/workflows/ci.yml)
+[![Version: 1.0.0](https://img.shields.io/badge/Version-v1.0.0-10b981.svg)](https://github.com/sidhu1512/SharePaste)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/sidhu1512/SharePaste?style=social)](https://github.com/sidhu1512/SharePaste/stargazers)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open-blue.svg)](https://sidhu1512.github.io/SharePaste)
+[![Live Site](https://img.shields.io/badge/Website-Open-emerald.svg)](https://sidhu1512.github.io/SharePaste)
+[![Launch App](https://img.shields.io/badge/Web%20App-Launch-cyan.svg)](https://sidhu1512.github.io/SharePaste/app.html)
 
 A high-performance, minimalist, **serverless** code and text sharing tool. Paste your code, copy the link, and share instantly. Everything is compressed with **Zstandard (Level 19)** and encoded directly into the URL hash — zero databases, zero tracking, 100% private.
 
-🔗 **[Live Demo](https://sidhu1512.github.io/SharePaste)**
+🌐 **[Official Website](https://sidhu1512.github.io/SharePaste)** &bull; 🚀 **[Launch Web App](https://sidhu1512.github.io/SharePaste/app.html)**
 
 ---
 

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "lint:prettier": "prettier --check .",
-    "lint:html": "htmlhint index.html",
+    "lint:html": "htmlhint index.html app.html",
     "lint": "npm run lint:prettier && npm run lint:html",
     "format": "prettier --write ."
   },
