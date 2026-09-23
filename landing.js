@@ -1,5 +1,5 @@
 /**
- * SharePaste — Staff-Level Marketing Landing Page Controller
+ * SharePaste — Minimalist Marketing Controller
  * Instant Hash Passthrough, Live Zstandard Benchmark Sandbox, FAQ Accordion.
  */
 
@@ -13,31 +13,28 @@ if (window.location.hash && window.location.hash.length > 1) {
 document.addEventListener('DOMContentLoaded', () => {
   // 2. Interactive Sandbox Presets
   const presets = {
-    typescript: `interface PastePayload {
-  id: string;
-  sourceCode: string;
-  language: 'typescript' | 'javascript' | 'rust';
-  compressionLevel: 19;
-  timestamp: number;
+    typescript: `interface CompressionProfile {
+  level: 19;
+  algorithm: 'zstd-wasm';
+  strategy: 'ultra';
 }
 
-export function evaluateSnippet(payload: PastePayload): boolean {
-  console.log(\`Decompressing \${payload.id} via Zstandard WebAssembly...\`);
-  return payload.compressionLevel === 19;
+export function evaluateSnippet(profile: CompressionProfile): boolean {
+  console.log("Decompressing snippet directly from URL hash...");
+  return profile.level === 19;
 }`,
-    python: `import hashlib
-from typing import Dict, Any
-
-class ServerlessSnippet:
-    def __init__(self, code: str, lang: str = "python"):
-        self.code = code
-        self.lang = lang
-
-    def fingerprint(self) -> str:
-        return hashlib.sha256(self.code.encode('utf-8')).hexdigest()[:12]
-
-    def summary(self) -> Dict[str, Any]:
-        return {"chars": len(self.code), "hash": self.fingerprint()}`,
+    python: `def binary_search(arr: list[int], target: int) -> int:
+    """Finds index of target in sorted array in O(log n) time."""
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1`,
     sql: `CREATE TABLE IF NOT EXISTS audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     session_token TEXT NOT NULL,
@@ -62,7 +59,7 @@ echo "==> Verified: Zero databases, 100% private in URL fragment."`,
   "features": [
     "Adaptive QR Code Generation",
     "Instant 1-Click Clipboard Copy",
-    "Zero Telemetry & Tracking"
+    "Zero Telemetry and Tracking"
   ]
 }`,
   };
@@ -74,7 +71,7 @@ echo "==> Verified: Zero databases, 100% private in URL fragment."`,
   const statUrlLen = document.getElementById('stat-url-len');
   const statMode = document.getElementById('stat-mode');
   const openEditorBtn = document.getElementById('btn-open-editor');
-  const presetButtons = document.querySelectorAll('.preset-btn');
+  const presetButtons = document.querySelectorAll('.preset-chip, .preset-btn');
 
   let wasmReady = false;
 
@@ -135,14 +132,8 @@ echo "==> Verified: Zero databases, 100% private in URL fragment."`,
     if (statMode) {
       if (urlLength <= 350) {
         statMode.textContent = 'Camera QR Scannable';
-        statMode.style.background = 'rgba(16, 185, 129, 0.12)';
-        statMode.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-        statMode.style.color = '#34d399';
       } else {
         statMode.textContent = '1-Click Direct Copy';
-        statMode.style.background = 'rgba(6, 182, 212, 0.12)';
-        statMode.style.borderColor = 'rgba(6, 182, 212, 0.3)';
-        statMode.style.color = '#38bdf8';
       }
     }
 
@@ -175,12 +166,14 @@ echo "==> Verified: Zero databases, 100% private in URL fragment."`,
   }
 
   // 3. FAQ Accordion Logic
-  document.querySelectorAll('.faq-item').forEach((item) => {
-    const question = item.querySelector('.faq-question');
+  document.querySelectorAll('.faq-card, .faq-item').forEach((item) => {
+    const question = item.querySelector('.faq-question-btn, .faq-question');
     if (question) {
       question.addEventListener('click', () => {
         const isOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach((i) => i.classList.remove('open'));
+        document
+          .querySelectorAll('.faq-card, .faq-item')
+          .forEach((i) => i.classList.remove('open'));
         if (!isOpen) item.classList.add('open');
       });
     }

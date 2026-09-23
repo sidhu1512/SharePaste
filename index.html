@@ -19,7 +19,7 @@
     />
     <meta
       name="description"
-      content="A blazing fast, serverless developer code &amp; text sharing tool. Pure client-side Zstandard Level 19 compression directly into the URL hash. Zero database, zero tracking, 100% private."
+      content="A high-performance serverless code and text sharing tool. Client-side Zstandard Level 19 WebAssembly compression directly into the URL fragment. Zero databases, zero tracking, 100% private."
     />
     <meta
       name="keywords"
@@ -75,7 +75,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -105,37 +105,36 @@
     </script>
   </head>
   <body>
-    <!-- Ambient Grids & Glow Background -->
+    <!-- Background Grid -->
     <div class="bg-grid"></div>
-    <div class="bg-aurora"></div>
 
     <!-- Navigation Header -->
     <header class="navbar">
       <div class="container nav-container">
-        <a href="#" class="nav-brand">
-          <div class="nav-logo-box">
+        <a href="#" class="nav-left">
+          <div class="brand-icon-box">
             <span>&lt;/&gt;</span>
           </div>
-          <span class="nav-brand-text">SHAREPASTE</span>
-          <span class="version-chip">v1.0.0</span>
+          <span class="brand-name">SHARE PASTE</span>
+          <span class="version-badge">v1.0.0</span>
         </a>
 
         <nav>
-          <ul class="nav-links">
-            <li><a href="#showcase" class="nav-link">Showcase</a></li>
-            <li><a href="#benchmark" class="nav-link">Live Benchmark</a></li>
-            <li><a href="#architecture" class="nav-link">Architecture</a></li>
-            <li><a href="#shortcuts" class="nav-link">Shortcuts</a></li>
-            <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <ul class="nav-menu">
+            <li><a href="#showcase" class="nav-menu-link">Overview</a></li>
+            <li><a href="#benchmark" class="nav-menu-link">Benchmark</a></li>
+            <li><a href="#architecture" class="nav-menu-link">Architecture</a></li>
+            <li><a href="#shortcuts" class="nav-menu-link">Shortcuts</a></li>
+            <li><a href="#faq" class="nav-menu-link">FAQ</a></li>
           </ul>
         </nav>
 
-        <div class="nav-actions">
+        <div class="nav-right">
           <a
             href="https://github.com/sidhu1512/SharePaste"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn-github"
+            class="btn-icon-nav"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
               <path
@@ -144,11 +143,11 @@
             </svg>
             <span>Star</span>
           </a>
-          <a href="app.html" class="btn-launch-nav">
-            <span>Launch App</span>
+          <a href="app.html" class="btn-app-nav">
+            <span>Launch Web App</span>
             <svg
-              width="14"
-              height="14"
+              width="13"
+              height="13"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -165,32 +164,31 @@
       <!-- Hero Section -->
       <section class="hero">
         <div class="container">
-          <div class="hero-pill">
-            <span class="hero-pill-dot"></span>
-            <span>Zero-Database Code Sharing &bull; Zstandard Level 19 WebAssembly</span>
+          <div class="hero-tag">
+            <span class="hero-tag-dot"></span>
+            <span>Zero Datastore &bull; Zstandard Level 19 WebAssembly</span>
           </div>
 
-          <h1 class="hero-headline">
+          <h1 class="hero-title">
             Zero database. Zero tracking.
-            <span class="hero-headline-gradient">Compressed into the URL.</span>
+            <span class="hero-title-sub">Compressed directly into the URL.</span>
           </h1>
 
-          <p class="hero-subhead">
-            Paste your code, compress via Facebook’s Zstandard Level 19 engine in WebAssembly, and
-            share instantly via URL hash or high-contrast QR code. 100% private, client-side, and
-            forever serverless.
+          <p class="hero-desc">
+            Paste code, compress via client-side Zstandard Level 19 WebAssembly, and share instantly
+            through URL fragment hashes. 100% private, serverless, and offline-ready.
           </p>
 
-          <div class="hero-cta-group">
-            <a href="app.html" class="btn-hero-primary">
+          <div class="hero-cta-row">
+            <a href="app.html" class="btn-primary-white">
               <span>Launch SharePaste Web App</span>
               <svg
-                width="16"
-                height="16"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2.5"
+                stroke-width="2.2"
               >
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -200,9 +198,9 @@
               href="https://github.com/sidhu1512/SharePaste"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn-hero-secondary"
+              class="btn-secondary-zinc"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
                 />
@@ -211,134 +209,149 @@
             </a>
           </div>
 
-          <div class="hero-guarantee">
-            100% Free &amp; Open Source under MIT License &bull;
-            <strong>Zero Accounts or Telemetry</strong> &bull; Permanent Snippet Validity
+          <div class="hero-note">
+            100% Free &amp; Open Source under MIT License &bull; Zero Accounts or Telemetry &bull;
+            Permanent URLs
           </div>
 
-          <!-- Authentic Staged Desktop Ecosystem -->
-          <div class="stage-wrapper" id="showcase">
-            <div class="stage-composition">
-              <!-- Main Window -->
-              <div class="stage-main-card">
-                <div class="card-topbar">
-                  <div class="window-dots"><span></span><span></span><span></span></div>
-                  <div class="card-topbar-title">sharepaste.io &bull; editor</div>
-                  <div style="width: 38px"></div>
+          <!-- Authentic Staged UI Showcase -->
+          <div class="showcase-stage" id="showcase">
+            <div class="browser-mockup">
+              <div class="browser-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="browser-title">sharepaste.io/app.html</div>
+                <div style="width: 36px"></div>
+              </div>
+              <img
+                src="docs/screenshots/overview.png"
+                alt="SharePaste Code Editor with TypeScript Compressor"
+                class="showcase-img"
+              />
+            </div>
+
+            <!-- Satellite Features Grid -->
+            <div class="showcase-features-grid">
+              <div class="feature-frame-card">
+                <div class="feature-frame-head">
+                  <span class="feature-frame-title">Adaptive QR Code</span>
+                  <span class="feature-frame-badge">&le; 350 Chars</span>
                 </div>
                 <img
-                  src="docs/screenshots/overview.png"
-                  alt="SharePaste Minimalist Editor Interface"
-                  class="stage-main-img"
+                  src="docs/screenshots/qr_code.png"
+                  alt="High-contrast QR Code Modal"
+                  class="feature-frame-img"
                 />
               </div>
 
-              <!-- Satellites -->
-              <div class="stage-satellites">
-                <div class="satellite-card">
-                  <div class="satellite-header">
-                    <span class="satellite-title">Camera-Scannable QR Code</span>
-                    <span class="satellite-badge">&le; 350 Chars</span>
-                  </div>
-                  <img
-                    src="docs/screenshots/qr_code.png"
-                    alt="High Contrast QR Code Modal"
-                    class="satellite-img"
-                  />
+              <div class="feature-frame-card">
+                <div class="feature-frame-head">
+                  <span class="feature-frame-title">1-Click Direct Copy</span>
+                  <span class="feature-frame-badge">&gt; 350 Chars</span>
                 </div>
+                <img
+                  src="docs/screenshots/inline_copy.png"
+                  alt="Inline Copied Feedback on Long Code"
+                  class="feature-frame-img"
+                />
+              </div>
 
-                <div class="satellite-card">
-                  <div class="satellite-header">
-                    <span class="satellite-title">Instant 1-Click Clipboard Copy</span>
-                    <span class="satellite-badge">&gt; 350 Chars</span>
-                  </div>
-                  <img
-                    src="docs/screenshots/inline_copy.png"
-                    alt="Direct Inline Copy Feedback"
-                    class="satellite-img"
-                  />
+              <div class="feature-frame-card">
+                <div class="feature-frame-head">
+                  <span class="feature-frame-title">Serverless Privacy</span>
+                  <span class="feature-frame-badge">RFC 3986</span>
                 </div>
+                <img
+                  src="docs/screenshots/about_modal.png"
+                  alt="About Modal and Architecture"
+                  class="feature-frame-img"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Interactive Live Zstandard Benchmark Sandbox -->
+      <!-- Live Interactive Compression Benchmark Sandbox -->
       <section class="section-pad" id="benchmark">
         <div class="container">
           <div class="section-head">
-            <span class="section-tagline">Client-Side WebAssembly</span>
-            <h2 class="section-heading">Live Zstandard Compression Sandbox</h2>
-            <p class="section-subheading">
+            <span class="section-tag">Client-Side WebAssembly</span>
+            <h2 class="section-title">Live Zstandard Compression Sandbox</h2>
+            <p class="section-desc">
               Test the real-time compression engine directly in your browser. Watch raw source code
               shrink into compact base64 URL fragments.
             </p>
           </div>
 
-          <div class="sandbox-card">
-            <div class="sandbox-presets">
-              <span style="font-size: 13px; color: var(--text-dim); margin-right: 6px"
-                >Presets:</span
-              >
-              <button class="preset-btn active" data-lang="typescript">TypeScript</button>
-              <button class="preset-btn" data-lang="python">Python</button>
-              <button class="preset-btn" data-lang="sql">SQL</button>
-              <button class="preset-btn" data-lang="bash">Bash</button>
-              <button class="preset-btn" data-lang="json">JSON</button>
+          <div class="sandbox-box">
+            <div class="sandbox-toolbar">
+              <div class="sandbox-presets">
+                <span
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    font-family: var(--font-mono);
+                    margin-right: 4px;
+                  "
+                  >Presets:</span
+                >
+                <button class="preset-chip active" data-lang="typescript">TypeScript</button>
+                <button class="preset-chip" data-lang="python">Python</button>
+                <button class="preset-chip" data-lang="sql">SQL</button>
+                <button class="preset-chip" data-lang="bash">Bash</button>
+                <button class="preset-chip" data-lang="json">JSON</button>
+              </div>
             </div>
 
-            <div class="sandbox-layout">
-              <div class="sandbox-input-panel">
+            <div class="sandbox-body">
+              <div class="sandbox-input-area">
                 <textarea id="sandbox-input" class="sandbox-textarea" spellcheck="false">
-interface PastePayload {
-  id: string;
-  sourceCode: string;
-  language: 'typescript' | 'javascript' | 'rust';
-  compressionLevel: 19;
-  timestamp: number;
+interface CompressionProfile {
+  level: 19;
+  algorithm: 'zstd-wasm';
+  strategy: 'ultra';
 }
 
-export function evaluateSnippet(payload: PastePayload): boolean {
-  console.log(`Decompressing ${payload.id} via Zstandard WebAssembly...`);
-  return payload.compressionLevel === 19;
+export function evaluateSnippet(profile: CompressionProfile): boolean {
+  console.log("Decompressing snippet directly from URL hash...");
+  return profile.level === 19;
 }</textarea>
               </div>
 
-              <div class="sandbox-stats-panel">
+              <div class="sandbox-metrics">
                 <div>
-                  <div class="stat-row">
-                    <span class="stat-label">Original Payload</span>
-                    <span class="stat-value" id="stat-raw">312 B (312 chars)</span>
+                  <div class="metric-row">
+                    <span class="metric-name">Original Payload</span>
+                    <span class="metric-val" id="stat-raw">226 B (226 chars)</span>
                   </div>
-                  <div class="stat-row">
-                    <span class="stat-label">Zstd Level 19 Payload</span>
-                    <span class="stat-value" id="stat-compressed">114 B</span>
+                  <div class="metric-row">
+                    <span class="metric-name">Zstd Level 19 Payload</span>
+                    <span class="metric-val" id="stat-compressed">98 B</span>
                   </div>
-                  <div class="stat-row">
-                    <span class="stat-label">Space Reduction</span>
-                    <span class="stat-value highlight" id="stat-savings">63% SAVED</span>
+                  <div class="metric-row">
+                    <span class="metric-name">Space Reduction</span>
+                    <span class="metric-val highlight" id="stat-savings">57% SAVED</span>
                   </div>
-                  <div class="stat-row">
-                    <span class="stat-label">Total URL Length</span>
-                    <span class="stat-value" id="stat-url-len">210 chars</span>
+                  <div class="metric-row">
+                    <span class="metric-name">Total URL Length</span>
+                    <span class="metric-val" id="stat-url-len">186 chars</span>
                   </div>
-                  <div class="stat-row">
-                    <span class="stat-label">Adaptive Share Mode</span>
-                    <span class="stat-value pill-mode" id="stat-mode">Camera QR Scannable</span>
+                  <div class="metric-row">
+                    <span class="metric-name">Adaptive Mode</span>
+                    <span class="metric-pill" id="stat-mode">Camera QR Scannable</span>
                   </div>
                 </div>
 
-                <div class="sandbox-action-bar">
-                  <a href="app.html" id="btn-open-editor" class="btn-open-editor">
-                    <span>Open in Full Editor</span>
+                <div class="sandbox-footer-action">
+                  <a href="app.html" id="btn-open-editor" class="btn-open-sandbox">
+                    <span>Open in Web App</span>
                     <svg
-                      width="14"
-                      height="14"
+                      width="13"
+                      height="13"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2.5"
+                      stroke-width="2.2"
                     >
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
@@ -354,22 +367,22 @@ export function evaluateSnippet(payload: PastePayload): boolean {
       <section class="section-pad" id="architecture">
         <div class="container">
           <div class="section-head">
-            <span class="section-tagline">Engineered for Privacy</span>
-            <h2 class="section-heading">How serverless pasting works.</h2>
-            <p class="section-subheading">
-              A modern architecture eliminating servers, storage limits, and security
+            <span class="section-tag">System Architecture</span>
+            <h2 class="section-title">Engineered for stateless simplicity.</h2>
+            <p class="section-desc">
+              A pure peer-to-peer sharing protocol eliminating databases, storage limits, and server
               vulnerabilities.
             </p>
           </div>
 
-          <div class="bento-grid">
+          <div class="bento-row">
             <!-- Card 1 -->
-            <div class="bento-card span-2">
+            <div class="bento-item span-2">
               <div>
-                <div class="bento-icon">
+                <div class="bento-icon-box">
                   <svg
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -382,25 +395,25 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                     <line x1="12" y1="22.08" x2="12" y2="12"></line>
                   </svg>
                 </div>
-                <h3 class="bento-title">Zstandard Level 19 WebAssembly Engine</h3>
-                <p class="bento-desc">
+                <h3 class="bento-item-title">Zstandard Level 19 WebAssembly Engine</h3>
+                <p class="bento-item-text">
                   By compiling Facebook’s zstd algorithm to WebAssembly
                   (<code>@bokuweb/zstd-wasm</code>), SharePaste compresses source code at maximum
-                  compression level 19 right inside your browser. Multi-line classes shrink by up to
-                  75%, allowing massive snippets to fit comfortably inside standard browser URL
-                  bounds.
+                  compression level 19 right inside the browser thread. Large multi-line classes
+                  shrink by up to 75%, allowing massive snippets to fit comfortably inside standard
+                  browser URL bounds.
                 </p>
               </div>
-              <span class="bento-tag">Compiled WebAssembly</span>
+              <span class="bento-item-tag">WASM Level 19</span>
             </div>
 
             <!-- Card 2 -->
-            <div class="bento-card">
+            <div class="bento-item">
               <div>
-                <div class="bento-icon" style="color: #06b6d4">
+                <div class="bento-icon-box">
                   <svg
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -410,23 +423,23 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                   </svg>
                 </div>
-                <h3 class="bento-title">Zero-Datastore Security</h3>
-                <p class="bento-desc">
+                <h3 class="bento-item-title">Zero-Datastore Security</h3>
+                <p class="bento-item-text">
                   Snippets reside exclusively in the URL fragment identifier (<code>#</code>). Under
-                  RFC 3986, web browsers never transmit fragment data across the wire to hosting
-                  servers or access logs.
+                  RFC 3986, browsers never transmit fragment data across the wire to hosting servers
+                  or access logs.
                 </p>
               </div>
-              <span class="bento-tag">RFC 3986 Privacy</span>
+              <span class="bento-item-tag">RFC 3986 Privacy</span>
             </div>
 
             <!-- Card 3 -->
-            <div class="bento-card">
+            <div class="bento-item">
               <div>
-                <div class="bento-icon" style="color: #f59e0b">
+                <div class="bento-icon-box">
                   <svg
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -438,23 +451,23 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                     <rect x="3" y="14" width="7" height="7"></rect>
                   </svg>
                 </div>
-                <h3 class="bento-title">Dual Adaptive Sharing</h3>
-                <p class="bento-desc">
+                <h3 class="bento-item-title">Dual Adaptive Sharing</h3>
+                <p class="bento-item-text">
                   Calculates scannability in real time: URLs &le; 350 chars display a high-contrast
                   Level L QR code with large modules (&ge; 2.6 px/module). URLs &gt; 350 chars
                   automatically switch to instant 1-click clipboard copy.
                 </p>
               </div>
-              <span class="bento-tag">Autonomous Threshold</span>
+              <span class="bento-item-tag">Adaptive Protocol</span>
             </div>
 
             <!-- Card 4 -->
-            <div class="bento-card span-2">
+            <div class="bento-item span-2">
               <div>
-                <div class="bento-icon" style="color: #a855f7">
+                <div class="bento-icon-box">
                   <svg
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -464,14 +477,14 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                     <polyline points="12 6 12 12 14 14"></polyline>
                   </svg>
                 </div>
-                <h3 class="bento-title">Zero Accounts &amp; Permanent Snippet Validity</h3>
-                <p class="bento-desc">
+                <h3 class="bento-item-title">Zero Accounts &amp; Permanent Snippet Validity</h3>
+                <p class="bento-item-text">
                   No sign-ups, no monthly subscriptions, and no expiration dates. Because the URL
                   itself holds the payload, your snippet links will never expire, be purged by a
                   backend cron job, or get blocked by database downtime.
                 </p>
               </div>
-              <span class="bento-tag">100% Peer-to-Peer</span>
+              <span class="bento-item-tag">100% Peer-to-Peer</span>
             </div>
           </div>
         </div>
@@ -481,44 +494,46 @@ export function evaluateSnippet(payload: PastePayload): boolean {
       <section class="section-pad" id="shortcuts">
         <div class="container">
           <div class="section-head">
-            <span class="section-tagline">Developer Ergonomics</span>
-            <h2 class="section-heading">Built for fast keystrokes.</h2>
-            <p class="section-subheading">
-              Full IDE keyboard shortcuts designed for fluid code sharing.
+            <span class="section-tag">Keystrokes</span>
+            <h2 class="section-title">Built for fluid developer workflows.</h2>
+            <p class="section-desc">
+              Full editor keyboard shortcuts for fast navigation and sharing.
             </p>
           </div>
 
-          <div class="kbd-table-card">
-            <div class="kbd-row">
-              <div class="kbd-info">
-                <span class="kbd-action">Share &amp; Copy Link</span>
-                <span class="kbd-detail">Trigger adaptive share action</span>
+          <div class="shortcuts-card">
+            <div class="shortcut-row">
+              <div>
+                <div class="shortcut-label">Share &amp; Copy Link</div>
+                <div class="shortcut-sub">Trigger adaptive share action</div>
               </div>
-              <div class="kbd-keys"><kbd>Ctrl</kbd><kbd>S</kbd> / <kbd>Cmd</kbd><kbd>S</kbd></div>
+              <div class="shortcut-keys">
+                <kbd>Ctrl</kbd><kbd>S</kbd> / <kbd>Cmd</kbd><kbd>S</kbd>
+              </div>
             </div>
 
-            <div class="kbd-row">
-              <div class="kbd-info">
-                <span class="kbd-action">New Snippet</span>
-                <span class="kbd-detail">Open a fresh snippet in a new tab</span>
+            <div class="shortcut-row">
+              <div>
+                <div class="shortcut-label">New Snippet</div>
+                <div class="shortcut-sub">Open a fresh snippet in a new tab</div>
               </div>
-              <div class="kbd-keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd></div>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd></div>
             </div>
 
-            <div class="kbd-row">
-              <div class="kbd-info">
-                <span class="kbd-action">Indent &amp; Unindent Selection</span>
-                <span class="kbd-detail">Adjust indentation by 4 spaces</span>
+            <div class="shortcut-row">
+              <div>
+                <div class="shortcut-label">Indent &amp; Unindent Selection</div>
+                <div class="shortcut-sub">Adjust indentation by 4 spaces</div>
               </div>
-              <div class="kbd-keys"><kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>Tab</kbd></div>
+              <div class="shortcut-keys"><kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>Tab</kbd></div>
             </div>
 
-            <div class="kbd-row">
-              <div class="kbd-info">
-                <span class="kbd-action">Dismiss Overlay / Modal</span>
-                <span class="kbd-detail">Close QR popup, dropdown, or about card</span>
+            <div class="shortcut-row">
+              <div>
+                <div class="shortcut-label">Dismiss Overlay / Modal</div>
+                <div class="shortcut-sub">Close QR popup, dropdown, or about card</div>
               </div>
-              <div class="kbd-keys"><kbd>Esc</kbd></div>
+              <div class="shortcut-keys"><kbd>Esc</kbd></div>
             </div>
           </div>
         </div>
@@ -528,16 +543,16 @@ export function evaluateSnippet(payload: PastePayload): boolean {
       <section class="section-pad" id="faq">
         <div class="container">
           <div class="section-head">
-            <span class="section-tagline">FAQ</span>
-            <h2 class="section-heading">Frequently asked questions.</h2>
+            <span class="section-tag">FAQ</span>
+            <h2 class="section-title">Frequently asked questions.</h2>
           </div>
 
-          <div class="faq-wrap">
-            <div class="faq-item open">
-              <div class="faq-question">
+          <div class="faq-list">
+            <div class="faq-card open">
+              <div class="faq-question-btn">
                 <span>Where is my code stored? Can anyone see it?</span>
                 <svg
-                  class="faq-icon"
+                  class="faq-icon-svg"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -546,7 +561,7 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
-              <div class="faq-answer">
+              <div class="faq-answer-body">
                 Your code is never stored in any database or cloud storage. When you share a
                 snippet, it is compressed with Zstandard WebAssembly on your machine and stored
                 directly inside the URL fragment (<code>#hash</code>). Web browsers never send
@@ -555,11 +570,11 @@ export function evaluateSnippet(payload: PastePayload): boolean {
               </div>
             </div>
 
-            <div class="faq-item">
-              <div class="faq-question">
+            <div class="faq-card">
+              <div class="faq-question-btn">
                 <span>Why Zstandard Level 19 instead of Gzip or LZMA?</span>
                 <svg
-                  class="faq-icon"
+                  class="faq-icon-svg"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -568,20 +583,19 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
-              <div class="faq-answer">
-                Zstandard (zstd) was created by Yann Collet at Meta (Facebook) to provide modern
-                high-ratio compression at blazingly fast decompression speeds. Compiling it to
-                WebAssembly allows us to run level 19 compression in milliseconds directly in
-                browser threads, achieving 25–40% better compression than traditional deflate/gzip
-                algorithms.
+              <div class="faq-answer-body">
+                Zstandard (zstd) was created by Yann Collet at Meta to provide modern high-ratio
+                compression at blazingly fast decompression speeds. Compiling it to WebAssembly
+                allows us to run level 19 compression in milliseconds directly in browser threads,
+                achieving 25–40% better compression than traditional deflate/gzip algorithms.
               </div>
             </div>
 
-            <div class="faq-item">
-              <div class="faq-question">
+            <div class="faq-card">
+              <div class="faq-question-btn">
                 <span>What is the maximum code size supported?</span>
                 <svg
-                  class="faq-icon"
+                  class="faq-icon-svg"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -590,7 +604,7 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
-              <div class="faq-answer">
+              <div class="faq-answer-body">
                 Most modern browsers (Chrome, Edge, Firefox, Safari) support URLs up to
                 32,000–64,000 characters. With Zstandard Level 19 compression, you can comfortably
                 share complete source files of 500 to 1,500+ lines of code without running into URL
@@ -598,11 +612,11 @@ export function evaluateSnippet(payload: PastePayload): boolean {
               </div>
             </div>
 
-            <div class="faq-item">
-              <div class="faq-question">
+            <div class="faq-card">
+              <div class="faq-question-btn">
                 <span>Can I run SharePaste offline or self-host it?</span>
                 <svg
-                  class="faq-icon"
+                  class="faq-icon-svg"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -611,18 +625,18 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
-              <div class="faq-answer">
-                Yes! SharePaste is entirely static HTML, JavaScript, and WebAssembly. You can clone
+              <div class="faq-answer-body">
+                Yes. SharePaste is entirely static HTML, JavaScript, and WebAssembly. You can clone
                 the GitHub repository and host it on GitHub Pages, Cloudflare Pages, Vercel, Nginx,
                 or run it locally using <code>python -m http.server 8000</code>.
               </div>
             </div>
 
-            <div class="faq-item">
-              <div class="faq-question">
+            <div class="faq-card">
+              <div class="faq-question-btn">
                 <span>Is SharePaste free and open source?</span>
                 <svg
-                  class="faq-icon"
+                  class="faq-icon-svg"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -631,7 +645,7 @@ export function evaluateSnippet(payload: PastePayload): boolean {
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
-              <div class="faq-answer">
+              <div class="faq-answer-body">
                 Yes, 100%. SharePaste is released under the permissive MIT License. You are free to
                 inspect the source code, fork the repository, or embed it into your own developer
                 workflows.
@@ -644,23 +658,23 @@ export function evaluateSnippet(payload: PastePayload): boolean {
       <!-- Bottom CTA Panel -->
       <section class="section-pad">
         <div class="container">
-          <div class="cta-panel">
-            <h2 class="section-heading" style="margin-bottom: 14px">
+          <div class="bottom-cta">
+            <h2 class="section-title" style="margin-bottom: 12px">
               Start sharing code without server baggage.
             </h2>
-            <p class="section-subheading" style="margin-bottom: 32px">
+            <p class="section-desc" style="margin-bottom: 28px">
               Free, serverless, zero telemetry, and compressed with Zstandard WebAssembly.
             </p>
-            <div class="hero-cta-group">
-              <a href="app.html" class="btn-hero-primary">
+            <div class="hero-cta-row">
+              <a href="app.html" class="btn-primary-white">
                 <span>Launch SharePaste Web App</span>
                 <svg
-                  width="16"
-                  height="16"
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2.5"
+                  stroke-width="2.2"
                 >
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
@@ -672,28 +686,28 @@ export function evaluateSnippet(payload: PastePayload): boolean {
     </main>
 
     <!-- Site Footer -->
-    <footer class="footer">
-      <div class="container footer-inner">
+    <footer class="site-footer">
+      <div class="container footer-row">
         <div>
           &copy; 2026 SharePaste. MIT License. Created by
           <a
             href="https://github.com/sidhu1512"
             target="_blank"
             rel="noopener noreferrer"
-            style="color: var(--text-muted); text-decoration: underline"
+            style="color: var(--text-primary); text-decoration: underline"
             >Siddharth Bhadu</a
           >.
         </div>
-        <div class="footer-nav">
-          <a href="#showcase" class="footer-link">Showcase</a>
-          <a href="#benchmark" class="footer-link">Benchmark</a>
-          <a href="#architecture" class="footer-link">Architecture</a>
-          <a href="#shortcuts" class="footer-link">Shortcuts</a>
+        <div class="footer-links">
+          <a href="#showcase" class="footer-link-item">Overview</a>
+          <a href="#benchmark" class="footer-link-item">Benchmark</a>
+          <a href="#architecture" class="footer-link-item">Architecture</a>
+          <a href="#shortcuts" class="footer-link-item">Shortcuts</a>
           <a
             href="https://github.com/sidhu1512/SharePaste"
             target="_blank"
             rel="noopener noreferrer"
-            class="footer-link"
+            class="footer-link-item"
             >GitHub</a
           >
         </div>

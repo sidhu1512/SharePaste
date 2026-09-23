@@ -9,7 +9,7 @@
 
 A high-performance, minimalist, **serverless** code and text sharing tool. Paste your code, copy the link, and share instantly. Everything is compressed with **Zstandard (Level 19)** and encoded directly into the URL hash — zero databases, zero tracking, 100% private.
 
-🌐 **[Official Website](https://sidhu1512.github.io/SharePaste)** &bull; 🚀 **[Launch Web App](https://sidhu1512.github.io/SharePaste/app.html)**
+**[Official Website](https://sidhu1512.github.io/SharePaste)** &bull; **[Launch Web App](https://sidhu1512.github.io/SharePaste/app.html)**
 
 ---
 
