@@ -115,4 +115,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(typeWriter, 500);
   }
+
+  // 7. Typewriter Effect for Mock Code Block
+  const typewriterCode = document.querySelector('.typewriter-code');
+  if (typewriterCode) {
+    const codeText = typewriterCode.textContent;
+    typewriterCode.textContent = '';
+
+    let i = 0;
+    const speed = 100; // ms per char
+
+    function typeCode() {
+      if (i < codeText.length) {
+        typewriterCode.textContent += codeText.charAt(i);
+        i++;
+        setTimeout(typeCode, speed);
+      }
+    }
+
+    // Start slightly after the main hero text
+    setTimeout(typeCode, 1500);
+  }
 });
