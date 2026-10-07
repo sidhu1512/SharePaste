@@ -3,173 +3,227 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SharePaste - High-Performance Serverless Code Sharing</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <title>SharePaste - The URL IS the paste</title>
     <link rel="stylesheet" href="landing.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   </head>
   <body>
-    <div class="background-grid"></div>
-    <div class="spotlight"></div>
+    <div class="noise-overlay"></div>
 
     <header class="header">
-      <div class="logo">SharePaste</div>
-      <nav class="nav-links">
+      <div class="logo">
+        <img src="favicon.svg" alt="SharePaste Logo" class="logo-img" width="32" height="32" />
+        <span>SharePaste</span>
+      </div>
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+      <nav class="nav" id="nav-menu">
         <a href="#features">Features</a>
-        <a href="#stack">Tech Stack</a>
-        <a href="#shortcuts">Shortcuts</a>
+        <a href="#how-it-works">How it Works</a>
+        <a href="#privacy">Privacy</a>
+        <a href="app.html" class="btn-primary">Open App</a>
       </nav>
-      <a href="app.html" class="btn-primary small">Open App</a>
     </header>
 
     <main>
-      <section class="hero">
+      <section class="hero scroll-reveal">
+        <div class="hero-beam"></div>
+        <div class="particles"></div>
+
         <div class="hero-content">
-          <h1 class="hero-title">
-            Share Code <br /><span class="gradient-text">Without Limits</span>
-          </h1>
-          <p class="hero-subtitle">
-            Zero database. Zero tracking. 100% serverless. Your snippets are compressed into the URL
-            via WASM-powered Zstandard.
+          <h1 class="hero-title typewriter-text">Zero bytes sent.<br />Zero trust needed.</h1>
+          <p class="hero-tagline">
+            The URL <strong>IS</strong> the paste. No servers. No databases.
           </p>
+
           <div class="hero-cta">
-            <a href="app.html" class="btn-primary">Start Sharing</a>
-            <a href="https://github.com/sidhu1512/SharePaste" class="btn-secondary"
-              >View on GitHub</a
-            >
+            <a href="app.html" class="btn-shimmer">
+              <span class="shimmer-text">Start Pasting Now</span>
+              <div class="shimmer-glow"></div>
+            </a>
           </div>
         </div>
 
         <div class="hero-visual">
-          <div class="glass-card mockup">
-            <div class="mockup-header">
+          <div class="browser-frame">
+            <div class="browser-topbar">
               <div class="dot red"></div>
               <div class="dot yellow"></div>
               <div class="dot green"></div>
             </div>
-            <pre
-              class="animated-code"
-            ><code><span class="keyword">function</span> <span class="function">compressSnippet</span>(<span class="param">code</span>) {
-  <span class="comment">// 19x Zstandard compression directly in browser</span>
-  <span class="keyword">return</span> <span class="object">Zstd</span>.<span class="method">compress</span>(code, { <span class="property">level</span>: <span class="number">19</span> });
-}
-
-<span class="keyword">const</span> url <span class="operator">=</span> <span class="string">`https://sharepaste.com/#${hash}`</span>;
-<span class="object">navigator</span>.<span class="property">clipboard</span>.<span class="method">writeText</span>(url);
-<span class="comment">// Instantly ready to share.</span></code></pre>
+            <img
+              src="docs/screenshots/overview.png"
+              alt="SharePaste App Screenshot"
+              loading="lazy"
+              class="main-screenshot"
+            />
+            <img
+              src="docs/screenshots/qr_popup.png"
+              alt="QR Code Sharing"
+              loading="lazy"
+              class="floating-card card-1"
+            />
+            <img
+              src="docs/screenshots/toolbar_expanded.png"
+              alt="Expanded Toolbar"
+              loading="lazy"
+              class="floating-card card-2"
+            />
           </div>
-          <img
-            src="docs/screenshots/overview.png"
-            alt="App Overview"
-            class="floating-image img-1"
-          />
-          <img
-            src="docs/screenshots/qr_code.png"
-            alt="QR Code Share"
-            class="floating-image img-2"
-          />
         </div>
       </section>
 
-      <section id="features" class="bento-section">
-        <h2 class="section-title">
-          Everything you need. <span class="gradient-text">Nothing you don't.</span>
-        </h2>
-        <div class="bento-grid">
-          <div class="bento-card card-large gradient-border">
-            <div class="card-content">
-              <h3>Serverless & Secure</h3>
-              <p>
-                Your code never touches a database. Everything is encoded directly into the URL
-                hash, making it inherently secure and impossible to take down.
-              </p>
-              <img src="docs/screenshots/about_modal.png" alt="Security Info" class="bento-img" />
+      <section id="features" class="bento-grid scroll-reveal">
+        <div class="bento-card bento-large gradient-mesh spotlight-card">
+          <div class="card-content">
+            <h3>Unmatched Compression</h3>
+            <p>
+              We use state-of-the-art WebAssembly Zstandard to compress your code directly in the
+              URL.
+            </p>
+            <div class="counter" data-target="19" data-prefix="0→">0</div>
+            <span class="counter-label">Compression Levels</span>
+          </div>
+        </div>
+        <div class="bento-card accent-blue spotlight-card">
+          <div class="card-content">
+            <h3>Syntax Highlighting</h3>
+            <p>Powered by Prism.js, beautiful themes and blazing fast.</p>
+            <div class="counter" data-target="14" data-suffix="+">0</div>
+            <span class="counter-label">Languages Supported</span>
+          </div>
+        </div>
+        <div class="bento-card accent-purple spotlight-card">
+          <div class="card-content">
+            <h3>QR Code Ready</h3>
+            <p>
+              Instantly share your code in the real world with generated QR codes for every snippet.
+            </p>
+          </div>
+        </div>
+        <div class="bento-card accent-green spotlight-card">
+          <div class="card-content">
+            <h3>Offline Capable</h3>
+            <p>
+              Works entirely in your browser. Disconnect the internet, and SharePaste keeps working.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" class="timeline-section scroll-reveal">
+        <h2>How it Works</h2>
+        <div class="timeline">
+          <div class="timeline-step">
+            <div class="step-number">1</div>
+            <div class="step-icon">📝</div>
+            <h3>Write</h3>
+            <p>Paste your code into the editor. No sign-up required.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">2</div>
+            <div class="step-icon">🗜️</div>
+            <h3>Compress</h3>
+            <p>WASM + Zstandard crunches your code into a tiny hash.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">3</div>
+            <div class="step-icon">🔗</div>
+            <h3>Share</h3>
+            <p>The URL is generated. Send it to anyone, anywhere.</p>
+          </div>
+          <svg class="timeline-connector" viewBox="0 0 1000 50" preserveAspectRatio="none">
+            <path
+              d="M 50 25 L 950 25"
+              stroke="var(--primary-color)"
+              stroke-width="4"
+              stroke-dasharray="10, 10"
+              fill="none"
+            />
+          </svg>
+        </div>
+      </section>
+
+      <section class="tech-stack scroll-reveal">
+        <h2>Powered By</h2>
+        <div class="marquee-container">
+          <div class="marquee">
+            <span>WebAssembly</span>
+            <span>Zstandard</span>
+            <span>Prism.js</span>
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>JavaScript</span>
+            <span>WebAssembly</span>
+            <span>Zstandard</span>
+            <span>Prism.js</span>
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>JavaScript</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="privacy" class="privacy-showcase scroll-reveal">
+        <h2>The Privacy Difference</h2>
+        <div class="comparison">
+          <div class="compare-side traditional">
+            <h3>Traditional Pastebin</h3>
+            <div class="flow">
+              <div class="icon-node">🖥️ Browser</div>
+              <div class="flow-arrow">➡️</div>
+              <div class="icon-node">☁️ Server</div>
+              <div class="flow-arrow">➡️</div>
+              <div class="icon-node red">🗄️ Database</div>
+              <div class="flow-result">☠️ Data Stored Forever</div>
             </div>
           </div>
-          <div class="bento-card">
-            <div class="card-content">
-              <h3>Instant Sharing</h3>
-              <p>Generate QR codes instantly for mobile sharing or 1-click copy for desktop.</p>
-              <img
-                src="docs/screenshots/inline_copy.png"
-                alt="Instant Copy"
-                class="bento-img-small"
-              />
-            </div>
-          </div>
-          <div class="bento-card">
-            <div class="card-content">
-              <h3>Dev-first Editor</h3>
-              <p>Prism.js syntax highlighting for 14+ languages. Smart indentation and themes.</p>
-              <img
-                src="docs/screenshots/toolbar_expanded.png"
-                alt="Toolbar"
-                class="bento-img-small"
-              />
+          <div class="compare-side sharepaste">
+            <h3>SharePaste</h3>
+            <div class="flow">
+              <div class="icon-node">🖥️ Browser</div>
+              <div class="flow-arrow">➡️</div>
+              <div class="icon-node green">🔗 URL</div>
+              <div class="flow-result">✅ Zero Server Storage</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="stack" class="stack-section">
-        <h2 class="section-title">Built with <span class="gradient-text">Modern Tech</span></h2>
-        <div class="stack-grid">
-          <div class="stack-item">
-            <div class="stack-icon">WASM</div>
-            <h4>WebAssembly</h4>
-            <p>Native-like performance in the browser</p>
-          </div>
-          <div class="stack-item">
-            <div class="stack-icon">Zstd</div>
-            <h4>Zstandard</h4>
-            <p>Maximum compression for long URLs</p>
-          </div>
-          <div class="stack-item">
-            <div class="stack-icon">JS</div>
-            <h4>Vanilla JS</h4>
-            <p>Zero bloat, lightning fast execution</p>
-          </div>
-          <div class="stack-item">
-            <div class="stack-icon">CSS</div>
-            <h4>Prism.js</h4>
-            <p>Beautiful syntax highlighting</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="shortcuts" class="shortcuts-section">
-        <div class="glass-card shortcuts-card gradient-border">
-          <h2>Power User Ready</h2>
-          <p>Keep your hands on the keyboard with intuitive shortcuts.</p>
-          <ul class="shortcut-list">
-            <li><kbd>Ctrl</kbd> + <kbd>S</kbd> <span>Share Snippet</span></li>
-            <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd> <span>New Snippet</span></li>
-            <li><kbd>Esc</kbd> <span>Close Modals</span></li>
-            <li><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> <span>Smart Indent</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="cta-section">
-        <h2 class="hero-title">Ready to share?</h2>
-        <a href="app.html" class="btn-primary large-btn animated-btn">Open Editor Now</a>
+      <section class="cta-section scroll-reveal">
+        <div class="cta-glow"></div>
+        <h2>Ready to share securely?</h2>
+        <p class="social-proof">Open source. MIT licensed. Trusted by developers.</p>
+        <a href="app.html" class="btn-shimmer large-btn">
+          <span class="shimmer-text">Launch SharePaste</span>
+        </a>
       </section>
     </main>
 
-    <footer>
+    <footer class="footer">
+      <div class="footer-separator"></div>
       <div class="footer-content">
-        <div class="footer-logo">SharePaste</div>
-        <div class="footer-links">
-          <a href="https://github.com/sidhu1512/SharePaste">GitHub</a>
-          <a href="#">Privacy (N/A)</a>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="app.html">App</a>
+          <a href="#features">Features</a>
+          <a href="#privacy">Privacy</a>
+        </div>
+        <div class="footer-col">
+          <h4>Docs</h4>
+          <a href="https://github.com/sharepaste/sharepaste">GitHub</a>
+          <a href="SECURITY.md">Security</a>
+          <a href="CONTRIBUTING.md">Contributing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Made with ♥</h4>
+          <p>Built for the open web.</p>
         </div>
       </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> SharePaste. MIT License.</p>
+      </div>
     </footer>
+
     <script src="landing.js"></script>
   </body>
 </html>

@@ -15,47 +15,45 @@ const server = app.listen(8000, async () => {
 
     await page.setViewport({ width: 1280, height: 800 });
 
-    // 1. The clean editor with some beautiful code snippet
-    await page.goto(
-      'http://localhost:8000/app.html#lzYtMwGzYjM9XGhlbGxvIHdvcmxkXG5cbmZ1bmN0aW9uIGdyZWV0KCkge1xuICBjb25zb2xlLmxvZygnSGVsbG8sIFNoYXJlUGFzdGUnKTtcbn1cblxuZ3JlZXQoKTs=',
-      { waitUntil: 'networkidle0' }
-    );
-    await delay(1000);
+    await page.goto('http://localhost:8000/app.html', { waitUntil: 'networkidle0' });
+    await delay(500);
+
+    // Inject code to trigger app logic
+    await page.evaluate(() => {
+      const editor = document.querySelector('#editor');
+      editor.value = 'function greet() {\n  console.log("Hello, SharePaste!");\n}\n\ngreet();';
+      editor.dispatchEvent(new Event('input'));
+    });
+    await delay(1500); // wait for prism
+
     await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/overview.png') });
 
-    // 2. The QR popup on a short snippet
-    // We need to click the QR share button
-    await page.evaluate(() => {
-      document.querySelector('.action-btn.share')?.click();
-    });
-    await delay(500);
-    await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/qr_code.png') });
-
-    // Close modal
-    await page.evaluate(() => {
-      document.querySelector('.modal-close')?.click();
-    });
-    await delay(500);
-
-    // 3. The inline copy feedback (Copied! tooltip)
-    await page.evaluate(() => {
-      document.querySelector('.action-btn.copy')?.click();
-    });
-    await delay(200);
-    await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/inline_copy.png') });
-
-    // 4. The toolbar expanded
-    // Assuming there is a toggle for the toolbar, but let's just make sure it's visible.
-    await page.evaluate(() => {
-      const el = document.querySelector('.toolbar-toggle');
-      if (el) el.click();
-    });
+    // 2. The toolbar expanded
+    await page.hover('#floating-toolbar');
     await delay(500);
     await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/toolbar_expanded.png') });
 
+    // 3. The QR popup on a short snippet
+    await page.evaluate(() => {
+      document.querySelector('#send-btn')?.click();
+    });
+    await delay(500);
+    await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/qr_popup.png') });
+
+    // Close modal (use Escape key to close the QR modal)
+    await page.keyboard.press('Escape');
+    await delay(500);
+
+    // 4. The inline copy feedback (Copied! tooltip)
+    await page.evaluate(() => {
+      document.querySelector('#tb-copy')?.click();
+    });
+    await delay(200);
+    await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/copy_feedback.png') });
+
     // 5. The about modal
     await page.evaluate(() => {
-      document.querySelector('.action-btn.about')?.click();
+      document.querySelector('#about-btn')?.click();
     });
     await delay(500);
     await page.screenshot({ path: path.join(__dirname, 'docs/screenshots/about_modal.png') });
