@@ -1847,6 +1847,86 @@ kbd {
 }
 
 /* ==========================================================================
+   Frequently Asked Questions (FAQ) Section
+   ========================================================================== */
+.faq-section {
+  padding: 6.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.faq-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.faq-card:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(168, 85, 247, 0.12);
+}
+
+.faq-card-wide {
+  grid-column: 1 / -1;
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.faq-icon {
+  color: var(--accent-purple);
+  flex-shrink: 0;
+}
+
+.faq-question h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.faq-answer {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.faq-answer strong {
+  color: #f4f4f5;
+  font-weight: 600;
+}
+
+.faq-answer code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: var(--font-mono);
+  color: #c084fc;
+}
+
+/* ==========================================================================
    Call To Action Section
    ========================================================================== */
 .cta-section {
@@ -2506,12 +2586,14 @@ kbd {
     gap: 0.4rem;
   }
 
-  .shortcuts-grid {
+  .shortcuts-grid,
+  .faq-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 
-  .shortcut-card {
+  .shortcut-card,
+  .faq-card {
     padding: 1.25rem;
   }
 
@@ -2526,6 +2608,7 @@ kbd {
 
   .lab-section,
   .shortcuts-section,
+  .faq-section,
   .features,
   .how-it-works,
   .architecture,

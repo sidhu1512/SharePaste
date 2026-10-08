@@ -1,0 +1,7 @@
+# SharePaste
+> Free, open-source (MIT) serverless code and text sharing tool. Content is compressed with Zstandard (WebAssembly) in the browser and stored in the URL fragment. No backend, no database, no accounts. Not encrypted.
+
+## Links
+- [Web app](https://sidhu1512.github.io/SharePaste/app.html)
+- [Website](https://sidhu1512.github.io/SharePaste/)
+- [Source](https://github.com/sidhu1512/SharePaste)

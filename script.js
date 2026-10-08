@@ -766,7 +766,7 @@ editor.addEventListener('keydown', (e) => {
 
 window.addEventListener('keydown', (e) => {
   // Ctrl/Cmd + S to Share
-  if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === 's' || e.key === 'S')) {
     e.preventDefault();
     if (editor.value && editor.value.trim()) {
       triggerShareAction();
@@ -777,6 +777,24 @@ window.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.altKey && (e.key === 'n' || e.key === 'N')) {
     e.preventDefault();
     window.open(window.location.origin + window.location.pathname, '_blank');
+  }
+
+  // Alt + Z to Toggle Word Wrap (VS Code standard)
+  if (e.altKey && !e.ctrlKey && !e.metaKey && (e.key === 'z' || e.key === 'Z')) {
+    e.preventDefault();
+    if (tbWrap) tbWrap.click();
+  }
+
+  // Ctrl/Cmd + L to Toggle Read-Only Lock
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === 'l' || e.key === 'L')) {
+    e.preventDefault();
+    if (tbLock) tbLock.click();
+  }
+
+  // Ctrl/Cmd + / to Toggle Line Numbers
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === '/' || e.code === 'Slash')) {
+    e.preventDefault();
+    if (tbLines) tbLines.click();
   }
 
   // Escape to close all popups & modals
@@ -964,3 +982,9 @@ if (snowBtn) {
    ========================================= */
 
 main();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}

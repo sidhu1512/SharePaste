@@ -658,4 +658,13 @@ exit 0`,
       setTimeout(() => toast.remove(), 300);
     }, 3200);
   }
+
+  // -------------------------------------------------------------
+  // 13. Service Worker Registration (Offline PWA Support)
+  // -------------------------------------------------------------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
 });

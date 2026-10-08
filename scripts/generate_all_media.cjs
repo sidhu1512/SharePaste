@@ -6,7 +6,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function main() {
   console.log('Starting media generation...');
-  const screenshotsDir = path.join(__dirname, 'docs/screenshots');
+  const screenshotsDir = path.join(__dirname, '../docs/screenshots');
   if (!fs.existsSync(screenshotsDir)) {
     fs.mkdirSync(screenshotsDir, { recursive: true });
   }
@@ -42,7 +42,7 @@ export async function createShareableHash(code: string): Promise<string> {
 console.log("Status: Ready to share via URL fragment #");`;
 
     // Setup screen recording
-    const videoPath = path.join(__dirname, 'docs/sharepaste-tour.webm');
+    const videoPath = path.join(__dirname, '../docs/sharepaste-tour.webm');
     const videoStream = fs.createWriteStream(videoPath);
     const recording = page.createScreenRecording({ frameRate: 30 });
     recording.pipe(videoStream);

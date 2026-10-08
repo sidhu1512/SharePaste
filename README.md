@@ -8,7 +8,7 @@
 [![Live Site](https://img.shields.io/badge/Website-Open-emerald.svg)](https://sidhu1512.github.io/SharePaste)
 [![Launch App](https://img.shields.io/badge/Web%20App-Launch-cyan.svg)](https://sidhu1512.github.io/SharePaste/app.html)
 
-A high-performance, minimalist, **serverless** code and text sharing tool. Paste your code, copy the link, and share instantly. Everything is compressed with **Zstandard (Level 19)** and encoded directly into the URL hash — zero databases, zero tracking, 100% private.
+A high-performance, minimalist, **serverless** code and text sharing tool. Paste your code, copy the link, and share instantly. Everything is compressed in your browser with **Zstandard WebAssembly (Level 19)** and encoded directly into the URL fragment — no backend, zero databases, zero tracking. Note: snippets are compressed and URL-encoded, not encrypted.
 
 **[Official Website](https://sidhu1512.github.io/SharePaste)** &bull; **[Launch Web App](https://sidhu1512.github.io/SharePaste/app.html)**
 
@@ -39,7 +39,7 @@ SharePaste dynamically adapts how links are shared based on payload length to gu
 
 ### 2. Privacy & Serverless Architecture
 
-Snippets never touch a backend database, analytics script, or third-party storage service. All data is compressed on the client using WebAssembly and stored directly in `#` (the URL fragment identifier), which browsers never transmit over HTTP requests.
+Snippets never touch a backend database, analytics script, or third-party storage service. All data is compressed on the client using WebAssembly and stored directly in `#` (the URL fragment identifier), which browsers never transmit over HTTP requests. Note that anyone with the link can decode and view the snippet.
 
 ![Compact About & Privacy](docs/screenshots/about_modal.png)
 
@@ -47,30 +47,41 @@ Snippets never touch a backend database, analytics script, or third-party storag
 
 ### 3. Zstandard Level 19 WebAssembly Compression
 
-Under the hood, SharePaste uses Facebook's industry-leading **Zstandard (zstd)** algorithm compiled to WebAssembly. By running compression at **Level 19**, large multi-line source files (such as 60+ line Java or TypeScript classes) are compressed into ultra-compact URL hashes that fit neatly within browser URL limits.
+Under the hood, SharePaste uses Facebook's industry-leading **Zstandard (zstd)** algorithm compiled to WebAssembly. By running compression at **Level 19**, source files are compressed into ultra-compact URL hashes that fit neatly within browser URL limits.
 
 ---
 
-### 4. Developer Ergonomics
+### 4. Developer Ergonomics & PWA Offline Support
 
+- **PWA & Offline Ready:** Ships with a Service Worker (`sw.js`) and Web App Manifest (`manifest.json`) for full offline capability in airplane mode.
 - **Smart Auto-Detection & Syntax Highlighting:** Automatically detects JavaScript, TypeScript, Python, Java, Rust, Go, C/C++, HTML/XML, CSS, SQL, JSON, Markdown, and Bash, with manual override.
 - **Intelligent Indentation:** Preserves indentation on `Enter` and automatically indents after `{`, `:`, `(`, and `[`.
 - **Tab & Shift+Tab:** Indents and unindents with 4 spaces.
 - **Collapsible Floating Toolbar & Status Bar:** Subtle, non-intrusive floating bars that expand on hover to keep your workspace distraction-free.
 - **File Drag & Drop:** Drop any source code file directly onto the editor to load it.
 - **Theme Customization:** Switch between developer themes (Tomorrow, Okaidia, Twilight, Funky).
-- **Word Wrap & Line Numbers:** Toggle soft wrapping and line numbers with a single click.
+- **Word Wrap & Line Numbers:** Toggle soft wrapping and line numbers with a single click or hotkey.
 
 ---
 
 ## Keyboard Shortcuts
 
-| Shortcut                                                       | Action                                                          |
-| :------------------------------------------------------------- | :-------------------------------------------------------------- |
-| <kbd>Ctrl</kbd> + <kbd>S</kbd> / <kbd>Cmd</kbd> + <kbd>S</kbd> | **Share & Copy** (Trigger adaptive share action)                |
-| <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd>                | **New Snippet** (Open fresh snippet in a new tab)               |
-| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd>             | **Indent / Unindent** (4 spaces)                                |
-| <kbd>Esc</kbd>                                                 | **Dismiss** (Close QR popup, About modal, or language dropdown) |
+| Shortcut                                                       | Action                                                              |
+| :------------------------------------------------------------- | :------------------------------------------------------------------ |
+| <kbd>Ctrl</kbd> + <kbd>S</kbd> / <kbd>Cmd</kbd> + <kbd>S</kbd> | **Share & Copy** (Trigger adaptive share action)                    |
+| <kbd>Alt</kbd> + <kbd>Z</kbd>                                  | **Toggle Word Wrap** (Switch between soft wrap & horizontal scroll) |
+| <kbd>Ctrl</kbd> + <kbd>L</kbd> / <kbd>Cmd</kbd> + <kbd>L</kbd> | **Toggle Read-Only Lock** (Prevent accidental edits)                |
+| <kbd>Ctrl</kbd> + <kbd>/</kbd> / <kbd>Cmd</kbd> + <kbd>/</kbd> | **Toggle Line Numbers** (Clean minimal view vs numbered gutter)     |
+| <kbd>Ctrl</kbd> + <kbd>K</kbd> / <kbd>Cmd</kbd> + <kbd>K</kbd> | **Command Palette** (Search sections & execute commands)            |
+| <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd>                | **New Snippet** (Clear editor and reset hash)                       |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd>             | **Indent / Unindent** (4 spaces)                                    |
+| <kbd>Esc</kbd>                                                 | **Dismiss** (Close QR popup, About modal, or Lightbox)              |
+
+---
+
+## Practical Size Limits
+
+While modern web browsers handle URLs with tens of thousands of characters, chat applications (Discord, Slack, Teams, WhatsApp) often truncate hyperlinks longer than **~2,000–4,000 characters**. For links intended for chat clients, keep code snippets under ~2–3 KB uncompressed.
 
 ---
 

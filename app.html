@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SharePaste | Serverless Snippets</title>
+    <title>SharePaste – Serverless Code & Text Sharing App</title>
 
     <link
       rel="icon"
@@ -11,37 +11,38 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Crect width='32' height='32' rx='8' fill='%23050505'/%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='none' stroke='%2327272a' stroke-width='1'/%3E%3Cpath d='M11 11L6 16L11 21' fill='none' stroke='%23e4e4e7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M21 11L26 16L21 21' fill='none' stroke='%23e4e4e7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='18' y1='9' x2='14' y2='23' stroke='%2371717a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"
     />
     <link rel="alternate icon" href="./favicon.svg?v=5" />
+    <link rel="manifest" href="manifest.json" />
     <meta
       name="description"
-      content="A blazing fast, serverless code & text sharing tool. Pure client-side Zstandard compression, zero database, zero limits."
+      content="High-performance serverless code and text sharing. Content is compressed with Zstandard WebAssembly in your browser and stored in the URL fragment."
     />
-    <meta
-      name="keywords"
-      content="code sharing, text sharing, serverless, Zstandard, QR code, clipboard, web app, developer tool"
-    />
-    <link rel="canonical" href="https://sidhu1512.github.io/SharePaste/" />
+    <link rel="canonical" href="https://sidhu1512.github.io/SharePaste/app.html" />
+
     <!-- Open Graph & Social -->
-    <meta property="og:title" content="SharePaste – Serverless Snippets" />
+    <meta property="og:title" content="SharePaste – Serverless Code & Text Sharing App" />
     <meta
       property="og:description"
-      content="A blazing fast, serverless tool to share code securely. No databases, zero limits."
+      content="Serverless code and text sharing. Content is compressed with Zstandard WebAssembly and stored in the URL fragment."
     />
     <meta
       property="og:image"
-      content="https://raw.githubusercontent.com/sidhu1512/SharePaste/main/docs/screenshots/overview.png"
+      content="https://sidhu1512.github.io/SharePaste/docs/screenshots/overview.png"
     />
-    <meta property="og:url" content="https://sidhu1512.github.io/SharePaste/" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SharePaste editor with a shareable compressed link" />
+    <meta property="og:url" content="https://sidhu1512.github.io/SharePaste/app.html" />
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SharePaste – Serverless Snippets" />
+    <meta name="twitter:title" content="SharePaste – Serverless Code & Text Sharing App" />
     <meta
       name="twitter:description"
-      content="A blazing fast, serverless tool to share code securely. No databases, zero limits."
+      content="Serverless code and text sharing. Content is compressed with Zstandard WebAssembly and stored in the URL fragment."
     />
     <meta
       name="twitter:image"
-      content="https://raw.githubusercontent.com/sidhu1512/SharePaste/main/docs/screenshots/overview.png"
+      content="https://sidhu1512.github.io/SharePaste/docs/screenshots/overview.png"
     />
     <meta name="theme-color" content="#050505" />
 
@@ -420,7 +421,12 @@
             </div>
 
             <!-- Toggle Read-Only Lock -->
-            <button id="tb-lock" class="toolbar-btn">
+            <button
+              id="tb-lock"
+              class="toolbar-btn"
+              title="Toggle Read-Only Lock (Ctrl + L)"
+              aria-label="Toggle Read-Only Lock"
+            >
               <svg
                 id="icon-lock"
                 width="16"
@@ -440,7 +446,12 @@
             <div class="w-px h-4 bg-zinc-700/50 mx-0.5"></div>
 
             <!-- Toggle Line Numbers -->
-            <button id="tb-lines" class="toolbar-btn font-bold">
+            <button
+              id="tb-lines"
+              class="toolbar-btn font-bold"
+              title="Toggle Line Numbers (Ctrl + /)"
+              aria-label="Toggle Line Numbers"
+            >
               <svg
                 width="16"
                 height="16"
@@ -459,7 +470,12 @@
             </button>
 
             <!-- Toggle Word Wrap -->
-            <button id="tb-wrap" class="toolbar-btn font-bold">
+            <button
+              id="tb-wrap"
+              class="toolbar-btn font-bold"
+              title="Toggle Word Wrap (Alt + Z)"
+              aria-label="Toggle Word Wrap"
+            >
               <svg
                 width="16"
                 height="16"
@@ -857,6 +873,9 @@
               <span class="text-zinc-200 font-medium text-xs">Shortcuts</span>
               <p class="text-zinc-500 text-[11px] leading-relaxed font-mono">
                 <span class="text-zinc-400">Ctrl+S</span> Share ·
+                <span class="text-zinc-400">Alt+Z</span> Wrap ·
+                <span class="text-zinc-400">Ctrl+L</span> Lock ·
+                <span class="text-zinc-400">Ctrl+/</span> Lines ·
                 <span class="text-zinc-400">Ctrl+Alt+N</span> New ·
                 <span class="text-zinc-400">Esc</span> Close
               </p>

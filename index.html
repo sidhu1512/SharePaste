@@ -3,35 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SharePaste - Zero-Datastore Serverless Code Sharing | High-Density Zstd WASM</title>
+    <title>SharePaste – Serverless Pastebin That Lives in the URL</title>
     <meta
       name="description"
-      content="High-performance, zero-datastore, client-side code and text sharing using WebAssembly Zstandard compression and RFC 3986 URL fragments. Zero bytes sent to servers."
-    />
-    <meta
-      name="keywords"
-      content="pastebin, serverless, zero-datastore, zstandard, wasm, code sharing, client-side, encrypted paste, qr code"
+      content="Share code and text with a link. SharePaste compresses it with Zstandard WebAssembly in your browser and stores it in the URL fragment. No server, database or sign-up."
     />
     <meta name="author" content="Siddharth Bhadu" />
+    <meta name="theme-color" content="#09090b" />
+    <link rel="canonical" href="https://sidhu1512.github.io/SharePaste/" />
+    <link rel="manifest" href="manifest.json" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sidhu1512.github.io/SharePaste/" />
-    <meta property="og:title" content="SharePaste - Zero-Datastore Serverless Code Sharing" />
+    <meta property="og:title" content="SharePaste – Serverless Pastebin That Lives in the URL" />
     <meta
       property="og:description"
-      content="The URL IS the paste. Real-time WASM Zstandard compression running 100% in your browser. Zero server custody, zero database logging."
+      content="Share code and text with a link. SharePaste compresses it with Zstandard WebAssembly in your browser and stores it in the URL fragment. No server, database or sign-up."
     />
-    <meta property="og:image" content="docs/screenshots/overview.png" />
+    <meta
+      property="og:image"
+      content="https://sidhu1512.github.io/SharePaste/docs/screenshots/overview.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SharePaste editor with a shareable compressed link" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SharePaste - Zero-Datastore Serverless Code Sharing" />
+    <meta name="twitter:title" content="SharePaste – Serverless Pastebin That Lives in the URL" />
     <meta
       name="twitter:description"
-      content="Client-side code sharing compressed into URL hash fragments. Zero server storage."
+      content="Share code and text with a link. SharePaste compresses it with Zstandard WebAssembly in your browser and stores it in the URL fragment. No server, database or sign-up."
     />
-    <meta name="twitter:image" content="docs/screenshots/overview.png" />
+    <meta
+      name="twitter:image"
+      content="https://sidhu1512.github.io/SharePaste/docs/screenshots/overview.png"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SharePaste",
+        "url": "https://sidhu1512.github.io/SharePaste/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (modern web browser)",
+        "browserRequirements": "Requires WebAssembly",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "license": "https://opensource.org/licenses/MIT",
+        "codeRepository": "https://github.com/sidhu1512/SharePaste",
+        "description": "Serverless code and text sharing. Content is compressed with Zstandard WebAssembly and stored in the URL fragment.",
+        "author": {
+          "@type": "Person",
+          "name": "Siddharth Bhadu",
+          "url": "https://github.com/sidhu1512"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Can the server see my code?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The text after '#' is an RFC 3986 URI fragment that is never sent in HTTP requests to the server. The static code is served from GitHub Pages, and recipients or chat apps that receive your link can read it."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is it encrypted?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The payload is compressed with Zstandard and encoded into URL-safe Base64, but it is not encrypted. Treat links like any public URL."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How long do links last?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Indefinitely, because the content is preserved directly inside the link and nothing expires."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What's the size limit?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Browsers allow very long URLs, but many chat apps truncate them beyond 2,000 to 4,000 characters. Keep snippets small for chat sharing."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is it different from Pastebin, Gist or PrivateBin?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pastebin and Gist store your paste on their servers. PrivateBin encrypts in the browser but still stores the encrypted data on a server. SharePaste stores nothing anywhere."
+            }
+          }
+        ]
+      }
+    </script>
 
     <link rel="stylesheet" href="landing.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -55,6 +134,7 @@
         <a href="#architecture">Architecture</a>
         <a href="#privacy">Privacy</a>
         <a href="#shortcuts">Shortcuts</a>
+        <a href="#faq">FAQ</a>
       </nav>
 
       <div class="header-actions">
@@ -108,11 +188,11 @@
         <div class="particles"></div>
 
         <div class="hero-content">
-          <h1 class="hero-title">Zero bytes sent.<br />Zero trust needed.</h1>
+          <h1 class="hero-title">Zero bytes sent.<br />No server stores your paste.</h1>
           <p class="hero-tagline">
             The URL <strong>IS</strong> the paste. High-density WebAssembly Zstandard compression
             executes directly inside your browser. Zero backend databases, zero packet sniffing,
-            zero third-party custody.
+            zero third-party server custody.
           </p>
 
           <div class="hero-cta">
@@ -185,7 +265,7 @@
                     <polyline points="16 18 22 12 16 6"></polyline>
                     <polyline points="8 6 2 12 8 18"></polyline>
                   </svg>
-                  <span>zero_trust_vault.ts</span>
+                  <span>serverless_snippet.ts</span>
                   <span class="native-tab-pill">Level 19 WASM</span>
                 </div>
                 <div class="native-editor-meta">
@@ -205,7 +285,7 @@
                 ><code><span class="syn-comment">// SharePaste Zero-Datastore RFC 3986 Pipeline</span>
 <span class="syn-keyword">import</span> { <span class="syn-func">compressZstd</span> } <span class="syn-keyword">from</span> <span class="syn-str">'@sharepaste/wasm'</span>;
 
-<span class="syn-keyword">export async function</span> <span class="syn-func">generateZeroTrustLink</span>(source: <span class="syn-type">string</span>): <span class="syn-type">Promise&lt;string&gt;</span> {
+<span class="syn-keyword">export async function</span> <span class="syn-func">generatePasteUrl</span>(source: <span class="syn-type">string</span>): <span class="syn-type">Promise&lt;string&gt;</span> {
   <span class="syn-comment">// 1. Compress raw UTF-8 bytes in-memory</span>
   <span class="syn-keyword">const</span> rawBuffer = <span class="syn-keyword">new</span> <span class="syn-type">TextEncoder</span>().<span class="syn-func">encode</span>(source);
   <span class="syn-keyword">const</span> compressed = <span class="syn-keyword">await</span> <span class="syn-func">compressZstd</span>(rawBuffer, { level: <span class="syn-num">19</span> });
@@ -835,7 +915,7 @@
           </div>
 
           <div class="shortcut-card">
-            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>W</kbd></div>
+            <div class="key-combo"><kbd>Alt</kbd> + <kbd>Z</kbd></div>
             <div class="shortcut-info">
               <h4>Toggle Word Wrap</h4>
               <p>Switch between horizontal scrollbar mode and soft line wrapping.</p>
@@ -847,6 +927,14 @@
             <div class="shortcut-info">
               <h4>Toggle Line Numbers</h4>
               <p>Clean minimal distraction-free canvas or full numbered IDE view.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd></div>
+            <div class="shortcut-info">
+              <h4>New Paste</h4>
+              <p>Clear current buffer and start a clean snippet session.</p>
             </div>
           </div>
 
@@ -1295,6 +1383,157 @@
         </div>
       </section>
 
+      <!-- FREQUENTLY ASKED QUESTIONS SECTION -->
+      <section id="faq" class="faq-section scroll-reveal">
+        <div class="section-header">
+          <span class="section-tag">Clarity & Integrity</span>
+          <h2>Frequently Asked Questions</h2>
+          <p class="section-subtext">
+            Everything you need to know about how SharePaste works, its privacy model, and its
+            limits.
+          </p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-card">
+            <div class="faq-question">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="faq-icon"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <h3>Can the server see my code?</h3>
+            </div>
+            <p class="faq-answer">
+              <strong>No.</strong> SharePaste stores snippet data exclusively in the URL hash
+              fragment (the text after <code>#</code>). Per RFC 3986, browsers never include
+              fragment identifiers in HTTP requests. The static app is served from GitHub Pages, so
+              host servers only ever see requests for <code>/app.html</code>, never your code.
+              However, recipients and chat applications that receive your full link can decode and
+              read the content.
+            </p>
+          </div>
+
+          <div class="faq-card">
+            <div class="faq-question">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="faq-icon"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <h3>Is it encrypted?</h3>
+            </div>
+            <p class="faq-answer">
+              <strong>No.</strong> Your snippet is compressed with Zstandard WebAssembly and encoded
+              into a URL-safe Base64 string, but it is <em>not</em> encrypted with a cryptographic
+              key. Anyone with access to the link or your browser history can view the code. Always
+              treat SharePaste URLs like public links.
+            </p>
+          </div>
+
+          <div class="faq-card">
+            <div class="faq-question">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="faq-icon"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <h3>How long do links last?</h3>
+            </div>
+            <p class="faq-answer">
+              <strong>Indefinitely.</strong> Because the entire snippet payload is serialized
+              directly inside the link itself, there is no remote database to expire, prune, or wipe
+              snippets. As long as any browser can open the SharePaste static page (or cache it
+              offline), the snippet will decode forever.
+            </p>
+          </div>
+
+          <div class="faq-card">
+            <div class="faq-question">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="faq-icon"
+              >
+                <line x1="4" y1="9" x2="20" y2="9"></line>
+                <line x1="4" y1="15" x2="20" y2="15"></line>
+                <line x1="10" y1="3" x2="8" y2="21"></line>
+                <line x1="16" y1="3" x2="14" y2="21"></line>
+              </svg>
+              <h3>What's the size limit?</h3>
+            </div>
+            <p class="faq-answer">
+              Modern web browsers can navigate URLs with tens of thousands of characters. However,
+              external chat applications (like Discord, Slack, WhatsApp, or Teams) and email clients
+              frequently truncate or break hyperlinks longer than ~2,000–4,000 characters. For
+              sharing across chat apps, keep your snippets concise.
+            </p>
+          </div>
+
+          <div class="faq-card faq-card-wide">
+            <div class="faq-question">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="faq-icon"
+              >
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+              <h3>How is it different from Pastebin, Gist or PrivateBin?</h3>
+            </div>
+            <p class="faq-answer">
+              Traditional pastebins like <strong>Pastebin</strong> and
+              <strong>GitHub Gist</strong> upload and store your source code on centralized servers
+              and databases. <strong>PrivateBin</strong> encrypts content client-side before upload,
+              but still requires a backend server to store the ciphertext blob.
+              <strong>SharePaste</strong> stores nothing anywhere: there is zero backend, zero
+              database, zero accounts, and zero disk storage. The URL <em>is</em> the paste.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <!-- CALL TO ACTION SECTION -->
       <section class="cta-section scroll-reveal">
         <div class="cta-glow"></div>
@@ -1359,6 +1598,7 @@
           <a href="#lab">Interactive Lab</a>
           <a href="#features">Features</a>
           <a href="#shortcuts">Shortcuts</a>
+          <a href="#faq">FAQ</a>
         </div>
 
         <div class="footer-col">
@@ -1369,18 +1609,38 @@
             rel="noopener noreferrer"
             >GitHub Repository</a
           >
-          <a href="SECURITY.md">Security Policy</a>
-          <a href="CONTRIBUTING.md">Contributing Guide</a>
-          <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>
-          <a href="LICENSE">MIT License</a>
+          <a
+            href="https://github.com/sidhu1512/SharePaste/blob/main/SECURITY.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Security Policy</a
+          >
+          <a
+            href="https://github.com/sidhu1512/SharePaste/blob/main/CONTRIBUTING.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Contributing Guide</a
+          >
+          <a
+            href="https://github.com/sidhu1512/SharePaste/blob/main/CODE_OF_CONDUCT.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Code of Conduct</a
+          >
+          <a
+            href="https://github.com/sidhu1512/SharePaste/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener noreferrer"
+            >MIT License</a
+          >
         </div>
 
         <div class="footer-col">
           <h4>Architectural Specs</h4>
           <p class="footer-spec-item"><strong>Algorithm:</strong> Zstandard v1.5.5</p>
           <p class="footer-spec-item"><strong>Execution:</strong> WebAssembly</p>
-          <p class="footer-spec-item"><strong>Datastore:</strong> None (Client URI)</p>
-          <p class="footer-spec-item"><strong>Privacy:</strong> 100% Zero-Trust</p>
+          <p class="footer-spec-item"><strong>Storage:</strong> None (Client URI Fragment)</p>
+          <p class="footer-spec-item"><strong>Telemetry:</strong> 0 Trackers / No Server Logs</p>
         </div>
       </div>
 
@@ -1601,6 +1861,28 @@
             <div class="cmd-item-text">
               <span class="cmd-item-label">Keyboard Shortcuts Matrix</span>
               <span class="cmd-item-desc">Home-row ergonomics and key bindings</span>
+            </div>
+          </div>
+          <div class="cmd-item" data-action="link" data-href="#faq">
+            <span class="cmd-item-icon">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Frequently Asked Questions (FAQ)</span>
+              <span class="cmd-item-desc">Privacy model, limits, and mechanics</span>
             </div>
           </div>
 

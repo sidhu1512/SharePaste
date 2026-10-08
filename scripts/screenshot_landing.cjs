@@ -23,7 +23,7 @@ const path = require('path');
   await new Promise((r) => setTimeout(r, 600));
 
   await page.screenshot({
-    path: path.join(__dirname, 'landing_page_screenshot.png'),
+    path: path.join(__dirname, '../landing_page_screenshot.png'),
     fullPage: false,
   });
   await browser.close();
