@@ -3,136 +3,742 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SharePaste - The URL IS the paste</title>
+    <title>SharePaste - Zero-Datastore Serverless Code Sharing | High-Density Zstd WASM</title>
+    <meta
+      name="description"
+      content="High-performance, zero-datastore, client-side code and text sharing using WebAssembly Zstandard compression and RFC 3986 URL fragments. Zero bytes sent to servers."
+    />
+    <meta
+      name="keywords"
+      content="pastebin, serverless, zero-datastore, zstandard, wasm, code sharing, client-side, encrypted paste, qr code"
+    />
+    <meta name="author" content="Siddharth Bhadu" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sidhu1512.github.io/SharePaste/" />
+    <meta property="og:title" content="SharePaste - Zero-Datastore Serverless Code Sharing" />
+    <meta
+      property="og:description"
+      content="The URL IS the paste. Real-time WASM Zstandard compression running 100% in your browser. Zero server custody, zero database logging."
+    />
+    <meta property="og:image" content="docs/screenshots/overview.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SharePaste - Zero-Datastore Serverless Code Sharing" />
+    <meta
+      name="twitter:description"
+      content="Client-side code sharing compressed into URL hash fragments. Zero server storage."
+    />
+    <meta name="twitter:image" content="docs/screenshots/overview.png" />
+
     <link rel="stylesheet" href="landing.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   </head>
   <body>
     <div class="noise-overlay"></div>
 
+    <!-- HEADER / NAVIGATION -->
     <header class="header">
-      <div class="logo">
-        <img src="favicon.svg" alt="SharePaste Logo" class="logo-img" width="32" height="32" />
-        <span>SharePaste</span>
+      <div class="header-left">
+        <a href="#" class="logo">
+          <img src="favicon.svg" alt="SharePaste Logo" class="logo-img" width="32" height="32" />
+          <span class="logo-text">SharePaste</span>
+          <span class="version-pill">v1.0.0</span>
+        </a>
       </div>
-      <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+
       <nav class="nav" id="nav-menu">
         <a href="#features">Features</a>
-        <a href="#how-it-works">How it Works</a>
+        <a href="#showcase">Showcase</a>
+        <a href="#lab">Interactive Lab</a>
+        <a href="#architecture">Architecture</a>
         <a href="#privacy">Privacy</a>
-        <a href="app.html" class="btn-primary">Open App</a>
+        <a href="#shortcuts">Shortcuts</a>
       </nav>
+
+      <div class="header-actions">
+        <button
+          class="kbd-btn"
+          id="open-cmd"
+          aria-label="Open Command Palette"
+          title="Command Palette (Ctrl + K)"
+        >
+          <kbd>Ctrl</kbd><kbd>K</kbd>
+        </button>
+        <a
+          href="https://github.com/sidhu1512/SharePaste"
+          class="icon-link github-header-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub Repository"
+          title="Star on GitHub"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+        </a>
+        <a href="app.html" class="btn-primary">Launch App</a>
+        <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+      </div>
     </header>
 
     <main>
+      <!-- HERO SECTION -->
       <section class="hero scroll-reveal">
         <div class="hero-beam"></div>
         <div class="particles"></div>
 
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>100% Client-Side • Zero-Datastore Architecture</span>
+        </div>
+
         <div class="hero-content">
           <h1 class="hero-title typewriter-text">Zero bytes sent.<br />Zero trust needed.</h1>
           <p class="hero-tagline">
-            The URL <strong>IS</strong> the paste. No servers. No databases.
+            The URL <strong>IS</strong> the paste. High-density WebAssembly Zstandard compression
+            executes directly inside your browser. Zero backend databases, zero packet sniffing,
+            zero third-party custody.
           </p>
 
           <div class="hero-cta">
             <a href="app.html" class="btn-shimmer">
-              <span class="shimmer-text">Start Pasting Now</span>
+              <span class="shimmer-text">Launch SharePaste</span>
               <div class="shimmer-glow"></div>
+            </a>
+            <a href="#lab" class="btn-secondary">Explore Live Lab</a>
+            <a
+              href="https://github.com/sidhu1512/SharePaste"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-gh-outline"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                />
+              </svg>
+              <span>GitHub</span>
             </a>
           </div>
         </div>
 
+        <!-- HERO VISUAL: SCREEN RECORDING VIDEO + FLOATING CARDS -->
         <div class="hero-visual">
           <div class="browser-frame">
             <div class="browser-topbar">
-              <div class="dot red"></div>
-              <div class="dot yellow"></div>
-              <div class="dot green"></div>
+              <div class="dots-group">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+              </div>
+              <div class="browser-url-bar">
+                <span class="url-lock">🔒</span>
+                <span class="url-text"
+                  >https://sidhu1512.github.io/SharePaste/app.html#KLUv_...</span
+                >
+              </div>
+              <div class="browser-status-chip">Zero Server Logs</div>
             </div>
-            <img
-              src="docs/screenshots/overview.png"
-              alt="SharePaste App Screenshot"
-              loading="lazy"
-              class="main-screenshot"
-            />
-            <img
-              src="docs/screenshots/qr_popup.png"
-              alt="QR Code Sharing"
-              loading="lazy"
-              class="floating-card card-1"
-            />
-            <img
-              src="docs/screenshots/toolbar_expanded.png"
-              alt="Expanded Toolbar"
-              loading="lazy"
-              class="floating-card card-2"
-            />
+
+            <!-- Crisp 30fps Real-Time Screen Recording Video -->
+            <div class="video-container">
+              <video
+                class="hero-video"
+                src="docs/sharepaste-tour.webm"
+                poster="docs/screenshots/overview.png"
+                autoplay
+                loop
+                muted
+                playsinline
+                aria-label="SharePaste Live Tour Video"
+              ></video>
+              <div class="video-live-badge">
+                <span class="live-dot"></span>
+                <span>REALTIME CAPTURE</span>
+              </div>
+            </div>
+
+            <!-- Floating High-DPI Showcase Cards -->
+            <div
+              class="floating-card card-1 lightbox-trigger"
+              data-img="docs/screenshots/qr_retina.png"
+              title="Click to inspect high-DPI QR modal"
+            >
+              <img
+                src="docs/screenshots/qr_popup.png"
+                alt="Adaptive QR Code Generator"
+                loading="lazy"
+                class="card-preview-img"
+              />
+              <span class="card-caption">Adaptive QR Transfer</span>
+            </div>
+
+            <div
+              class="floating-card card-2 lightbox-trigger"
+              data-img="docs/screenshots/toolbar_retina.png"
+              title="Click to inspect high-DPI floating toolbar"
+            >
+              <img
+                src="docs/screenshots/toolbar_expanded.png"
+                alt="Ergonomic Floating Toolbar"
+                loading="lazy"
+                class="card-preview-img"
+              />
+              <span class="card-caption">Ergonomic Floating Dock</span>
+            </div>
+
             <div class="floating-card card-3 mock-code">
-              <pre><code class="typewriter-code">const url = compress(code);</code></pre>
+              <div class="mock-code-header">
+                <span class="mock-dot"></span>
+                <span class="mock-title">zstd-wasm.ts</span>
+              </div>
+              <pre><code class="typewriter-code">const hash = zstd.compress(code, 19);</code></pre>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- INTERACTIVE 3-COLUMN SHOWCASE STAGE (doing-it Inspired) -->
+      <section id="showcase" class="showcase-section scroll-reveal">
+        <div class="section-header">
+          <span class="section-tag">Interactive Stage</span>
+          <h2>Engineered with Systems Precision</h2>
+          <p class="section-subtext">
+            Explore the four cornerstone layers of SharePaste. Switch tabs below to inspect live
+            interface states, technical telemetry, and runtime guarantees.
+          </p>
+        </div>
+
+        <div class="stage-tabs" role="tablist">
+          <button class="stage-tab active" data-tab="editor" role="tab" aria-selected="true">
+            <span class="tab-icon">⚡</span>
+            <span>High-Speed Canvas</span>
+          </button>
+          <button class="stage-tab" data-tab="qr" role="tab" aria-selected="false">
+            <span class="tab-icon">📱</span>
+            <span>Adaptive QR Engine</span>
+          </button>
+          <button class="stage-tab" data-tab="toolbar" role="tab" aria-selected="false">
+            <span class="tab-icon">🛠️</span>
+            <span>Floating Action Dock</span>
+          </button>
+          <button class="stage-tab" data-tab="privacy" role="tab" aria-selected="false">
+            <span class="tab-icon">🔒</span>
+            <span>Client-Only Isolation</span>
+          </button>
+        </div>
+
+        <div class="showcase-stage">
+          <!-- Left Column: Architectural Narrative & Specs -->
+          <div class="stage-col stage-info" id="stage-info-content">
+            <div class="stage-meta-pill" id="stage-pill">CANVAS ENGINE</div>
+            <h3 id="stage-title">Zero-Latency Code Editor</h3>
+            <p id="stage-desc">
+              Syntax-highlighted in real time powered by Prism.js. Built with synchronized line
+              counters, soft line wrapping, read-only locking, and responsive mobile-optimized
+              typography.
+            </p>
+            <ul class="stage-features" id="stage-bullets">
+              <li>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent-green)"
+                  stroke-width="2.5"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>14+ core syntax grammars supported out of the box</span>
+              </li>
+              <li>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent-green)"
+                  stroke-width="2.5"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Sub-millisecond input response with zero main-thread lag</span>
+              </li>
+              <li>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent-green)"
+                  stroke-width="2.5"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Drag-and-drop file ingestion directly into browser buffer</span>
+              </li>
+            </ul>
+            <div class="stage-shortcut-callout">
+              <span class="callout-label">Hotkey Shortcut:</span>
+              <kbd>Ctrl</kbd> + <kbd>S</kbd> to compress & generate shareable link
+            </div>
+          </div>
+
+          <!-- Middle Column: Window Frame with Crisp Retina Capture -->
+          <div class="stage-col stage-display">
+            <div class="browser-frame stage-frame">
+              <div class="browser-topbar">
+                <div class="dots-group">
+                  <div class="dot red"></div>
+                  <div class="dot yellow"></div>
+                  <div class="dot green"></div>
+                </div>
+                <div class="browser-title-display" id="stage-window-title">
+                  SharePaste — Editor Mode
+                </div>
+                <button
+                  class="stage-lightbox-btn lightbox-trigger"
+                  id="stage-zoom-btn"
+                  data-img="docs/screenshots/overview_retina.png"
+                  title="Zoom in high-DPI Lightbox"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                  </svg>
+                  <span>Zoom 2x</span>
+                </button>
+              </div>
+              <div class="stage-screen-wrap">
+                <img
+                  id="stage-img"
+                  src="docs/screenshots/overview.png"
+                  alt="SharePaste Stage Screen"
+                  class="stage-main-image lightbox-trigger"
+                  data-img="docs/screenshots/overview_retina.png"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Technical Telemetry & System Specs -->
+          <div class="stage-col stage-telemetry">
+            <h4 class="telemetry-heading">Runtime Telemetry</h4>
+
+            <div class="telemetry-card">
+              <span class="telemetry-label">Compression Ratio</span>
+              <div class="telemetry-value-wrap">
+                <span class="telemetry-val" id="stage-stat-1">Up to 84%</span>
+                <span class="telemetry-sub">Zstd Level 19</span>
+              </div>
+              <p class="telemetry-note" id="stage-stat-1-note">
+                Extreme entropy reduction tailored for plain-text source code.
+              </p>
+            </div>
+
+            <div class="telemetry-card">
+              <span class="telemetry-label">Network Transmission</span>
+              <div class="telemetry-value-wrap">
+                <span class="telemetry-val highlight-green" id="stage-stat-2">0 Bytes</span>
+                <span class="telemetry-sub">RFC 3986 #</span>
+              </div>
+              <p class="telemetry-note" id="stage-stat-2-note">
+                Fragment identifiers never reach the upstream server.
+              </p>
+            </div>
+
+            <div class="telemetry-card">
+              <span class="telemetry-label">WASM Latency</span>
+              <div class="telemetry-value-wrap">
+                <span class="telemetry-val" id="stage-stat-3">&lt; 0.8 ms</span>
+                <span class="telemetry-sub">Client WASM</span>
+              </div>
+              <p class="telemetry-note" id="stage-stat-3-note">
+                Instantaneous decompression on page load with zero spinners.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTERACTIVE LAB / COMPRESSION SIMULATOR (doing-it Inspired) -->
+      <section id="lab" class="lab-section scroll-reveal">
+        <div class="section-header">
+          <span class="section-tag">Interactive Simulation</span>
+          <h2>Live Compression & QR Threshold Lab</h2>
+          <p class="section-subtext">
+            Test SharePaste's live payload calculation directly on this page. Choose a code preset
+            or write your own to watch real-time byte compression and QR threshold routing.
+          </p>
+        </div>
+
+        <div class="lab-presets">
+          <span class="presets-label">Presets:</span>
+          <button class="preset-chip active" data-preset="react">React Component</button>
+          <button class="preset-chip" data-preset="fastapi">FastAPI Route</button>
+          <button class="preset-chip" data-preset="sql">SQL Migration</button>
+          <button class="preset-chip" data-preset="json">Kubernetes Manifest</button>
+          <button class="preset-chip" data-preset="bash">Deploy Script</button>
+        </div>
+
+        <div class="lab-grid">
+          <!-- Lab Input Console -->
+          <div class="lab-console">
+            <div class="lab-console-header">
+              <div class="console-title">
+                <span class="console-dot"></span>
+                <span>Buffer Input (<span id="lab-char-count">0</span> characters)</span>
+              </div>
+              <button class="lab-clear-btn" id="lab-clear">Clear</button>
+            </div>
+            <textarea
+              id="lab-input"
+              spellcheck="false"
+              placeholder="Paste or type code here to benchmark real-time compression..."
+            ></textarea>
+          </div>
+
+          <!-- Lab Telemetry & Dynamic Output -->
+          <div class="lab-output">
+            <div class="lab-metrics-bar">
+              <div class="metric-item">
+                <span class="metric-label">RAW SIZE</span>
+                <span class="metric-val" id="lab-raw-size">0 B</span>
+              </div>
+              <div class="metric-divider">→</div>
+              <div class="metric-item">
+                <span class="metric-label">COMPRESSED</span>
+                <span class="metric-val highlight-purple" id="lab-comp-size">0 B</span>
+              </div>
+              <div class="metric-divider">|</div>
+              <div class="metric-item">
+                <span class="metric-label">SAVED</span>
+                <span class="metric-val highlight-green" id="lab-saved-pct">0%</span>
+              </div>
+            </div>
+
+            <!-- Dynamic QR Threshold Banner -->
+            <div class="threshold-status-card" id="lab-threshold-card">
+              <div class="threshold-header">
+                <span class="threshold-badge" id="lab-badge">ADAPTIVE QR ENABLED</span>
+                <span class="threshold-meta" id="lab-mode-info">&lt; 350 Char Limit</span>
+              </div>
+              <p class="threshold-desc" id="lab-threshold-desc">
+                Payload fits cleanly into a high-density scannable QR code (&gt; 2.6 px/module).
+                Scanning with your smartphone instantly mounts the snippet.
+              </p>
+            </div>
+
+            <!-- Generated URL Preview -->
+            <div class="lab-url-box">
+              <span class="lab-url-label">Generated URL Fragment Preview:</span>
+              <div class="lab-url-input-group">
+                <input
+                  type="text"
+                  id="lab-url-field"
+                  readonly
+                  value="https://sidhu1512.github.io/SharePaste/app.html#..."
+                />
+                <button class="lab-action-btn" id="lab-copy-btn" title="Copy to clipboard">
+                  <span id="lab-copy-text">Copy</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="lab-actions-row">
+              <a
+                href="app.html"
+                id="lab-launch-btn"
+                class="btn-shimmer lab-launch"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="shimmer-text">Open in SharePaste Editor →</span>
+                <div class="shimmer-glow"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BENTO GRID CORE CAPABILITIES -->
       <section id="features" class="bento-grid scroll-reveal">
         <div class="bento-card bento-large gradient-mesh spotlight-card">
           <div class="card-content">
-            <h3>Unmatched Compression</h3>
+            <span class="card-tag">WASM COMPRESSION</span>
+            <h3>Unmatched Density</h3>
             <p>
-              We use state-of-the-art WebAssembly Zstandard to compress your code directly in the
-              URL.
+              We deploy raw C WebAssembly Zstandard to compress your code directly into the URL
+              hash. Extreme dictionary-grade compression ensures maximum payload density.
             </p>
             <div class="counter" data-target="19" data-prefix="0→">0</div>
-            <span class="counter-label">Compression Levels</span>
+            <span class="counter-label">Compression Levels Available</span>
           </div>
         </div>
+
         <div class="bento-card accent-blue spotlight-card">
           <div class="card-content">
-            <h3>Syntax Highlighting</h3>
-            <p>Powered by Prism.js, beautiful themes and blazing fast.</p>
+            <span class="card-tag">SYNTAX GRAMMARS</span>
+            <h3>Prism.js Highlighting</h3>
+            <p>
+              Full support for JS, TS, Rust, Python, Go, HTML, CSS, SQL, JSON, Markdown, and more.
+            </p>
             <div class="counter" data-target="14" data-suffix="+">0</div>
             <span class="counter-label">Languages Supported</span>
           </div>
         </div>
+
         <div class="bento-card accent-purple spotlight-card">
           <div class="card-content">
-            <h3>QR Code Ready</h3>
+            <span class="card-tag">SMART TRANSFER</span>
+            <h3>Adaptive QR Engine</h3>
             <p>
-              Instantly share your code in the real world with generated QR codes for every snippet.
+              Under 350 characters? SharePaste generates a crystal-clear, scannable QR matrix
+              instantly on screen for instant phone handoff.
             </p>
           </div>
         </div>
+
         <div class="bento-card accent-green spotlight-card">
           <div class="card-content">
+            <span class="card-tag">OFFLINE RESILIENCE</span>
             <h3>Offline Capable</h3>
             <p>
-              Works entirely in your browser. Disconnect the internet, and SharePaste keeps working.
+              Works 100% locally. Disconnect the internet, turn on airplane mode, and SharePaste
+              keeps decompressing and generating links effortlessly.
             </p>
           </div>
         </div>
       </section>
 
+      <!-- EDITORIAL DEEP-DIVE STORIES (doing-it Inspired) -->
+      <section id="architecture" class="editorial-section scroll-reveal">
+        <div class="section-header">
+          <span class="section-tag">Deep Architectural Breakdown</span>
+          <h2>Why Zero-Datastore Outperforms Traditional Cloud Pastebins</h2>
+          <p class="section-subtext">
+            A staff engineer's guide to how client-side hashing eliminates storage leaks, server
+            exploits, and surveillance vectors.
+          </p>
+        </div>
+
+        <!-- Story 1: RFC 3986 URL Hash -->
+        <div class="editorial-story">
+          <div class="story-text">
+            <div class="story-number">01</div>
+            <h3>The URL Hash (#) Is Never Transmitted</h3>
+            <p>
+              According to the RFC 3986 URI specification, fragment identifiers (everything
+              following the <code>#</code> character) are strictly client-side constructs. Your web
+              browser strips the fragment before issuing HTTP GET requests to any web server or CDN.
+            </p>
+            <p>
+              This means our hosting servers, network edge routers, proxies, and ISPs
+              <strong>never see your paste contents</strong>. Even with a subpoena or database
+              breach, there is literally nothing to hand over.
+            </p>
+            <div class="story-pills">
+              <span class="story-pill">RFC 3986 Compliant</span>
+              <span class="story-pill">Zero Server Handshake</span>
+              <span class="story-pill">No Expiration Limits</span>
+            </div>
+          </div>
+          <div class="story-visual">
+            <div
+              class="browser-frame lightbox-trigger"
+              data-img="docs/screenshots/overview_retina.png"
+            >
+              <img
+                src="docs/screenshots/overview.png"
+                alt="SharePaste Editor Overview"
+                loading="lazy"
+              />
+              <div class="visual-badge">Click to zoom</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story 2: Adaptive QR Codes -->
+        <div class="editorial-story reversed">
+          <div class="story-text">
+            <div class="story-number">02</div>
+            <h3>Adaptive Multi-Density QR Routing</h3>
+            <p>
+              Traditional tools try to force massive URLs into unreadable, dense QR codes with tiny
+              pixel modules that fail to scan under normal camera lenses.
+            </p>
+            <p>
+              SharePaste continuously checks the compressed URL length against our scannable
+              threshold (350 characters / ≥2.6 px per module). Short snippets render an elegant QR
+              modal immediately; longer snippets automatically pivot to a 1-click clipboard link to
+              guarantee 100% scan reliability.
+            </p>
+            <div class="story-pills">
+              <span class="story-pill">≥2.6 px/module Matrix</span>
+              <span class="story-pill">Physical-to-Digital Bridge</span>
+              <span class="story-pill">Scan-to-Device</span>
+            </div>
+          </div>
+          <div class="story-visual">
+            <div class="browser-frame lightbox-trigger" data-img="docs/screenshots/qr_retina.png">
+              <img src="docs/screenshots/qr_popup.png" alt="SharePaste QR Modal" loading="lazy" />
+              <div class="visual-badge">Click to zoom</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story 3: Mobile & Ergonomics -->
+        <div class="editorial-story">
+          <div class="story-text">
+            <div class="story-number">03</div>
+            <h3>Pristine Mobile Responsiveness</h3>
+            <p>
+              Engineered from the ground up for both high-end desktop workstations and pocket mobile
+              devices. Touch targets are carefully measured, the floating toolbar floats without
+              obstructing text, and responsive viewport sizing prevents zoom jumping on mobile
+              keyboards.
+            </p>
+            <p>
+              Whether reading code on a subway train or pasting configuration logs from an iPad,
+              SharePaste gives you a native app feel without downloading an app.
+            </p>
+            <div class="story-pills">
+              <span class="story-pill">iOS & Android Ready</span>
+              <span class="story-pill">Retina Optimized</span>
+              <span class="story-pill">Zero Framework Bloat</span>
+            </div>
+          </div>
+          <div class="story-visual">
+            <div
+              class="browser-frame lightbox-trigger"
+              data-img="docs/screenshots/mobile_retina.png"
+            >
+              <img
+                src="docs/screenshots/mobile_retina.png"
+                alt="SharePaste Mobile Viewport"
+                loading="lazy"
+              />
+              <div class="visual-badge">Click to zoom</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MECHANICAL KEYBOARD SHORTCUTS MATRIX (doing-it Inspired) -->
+      <section id="shortcuts" class="shortcuts-section scroll-reveal">
+        <div class="section-header">
+          <span class="section-tag">Ergonomic Workflow</span>
+          <h2>Keyboard Shortcuts Matrix</h2>
+          <p class="section-subtext">
+            Keep your hands on the home row. Every major operation in SharePaste is bound to
+            sculpted mechanical hotkeys.
+          </p>
+        </div>
+
+        <div class="shortcuts-grid">
+          <div class="shortcut-card">
+            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>S</kbd></div>
+            <div class="shortcut-info">
+              <h4>Generate & Share</h4>
+              <p>Instantly compress editor buffer and trigger adaptive link/QR modal.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>L</kbd></div>
+            <div class="shortcut-info">
+              <h4>Toggle Read-Only Lock</h4>
+              <p>Prevent accidental edits while presenting code or sharing your screen.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>W</kbd></div>
+            <div class="shortcut-info">
+              <h4>Toggle Word Wrap</h4>
+              <p>Switch between horizontal scrollbar mode and soft line wrapping.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>/</kbd></div>
+            <div class="shortcut-info">
+              <h4>Toggle Line Numbers</h4>
+              <p>Clean minimal distraction-free canvas or full numbered IDE view.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>K</kbd></div>
+            <div class="shortcut-info">
+              <h4>Command Palette</h4>
+              <p>Universal spotlight menu to jump anywhere or execute actions.</p>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="key-combo">
+              <kbd>Esc</kbd>
+            </div>
+            <div class="shortcut-info">
+              <h4>Dismiss Modal</h4>
+              <p>Instantly close QR popup, About sheet, Lightbox, or Command Palette.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS TIMELINE -->
       <section id="how-it-works" class="timeline-section scroll-reveal">
-        <h2>How it Works</h2>
+        <div class="section-header">
+          <span class="section-tag">Execution Pipeline</span>
+          <h2>How it Works</h2>
+          <p class="section-subtext">Four deterministic steps running entirely in userland.</p>
+        </div>
+
         <div class="timeline">
           <div class="timeline-step">
             <div class="step-number">1</div>
             <div class="step-icon">📝</div>
             <h3>Write</h3>
-            <p>Paste your code into the editor. No sign-up required.</p>
+            <p>
+              Paste or type your code into the high-performance editor. Zero sign-up, zero accounts.
+            </p>
           </div>
           <div class="timeline-step">
             <div class="step-number">2</div>
             <div class="step-icon">🗜️</div>
             <h3>Compress</h3>
-            <p>WASM + Zstandard crunches your code into a tiny hash.</p>
+            <p>
+              WebAssembly Zstandard crunches source code into high-density binary arrays in &lt;1ms.
+            </p>
           </div>
           <div class="timeline-step">
             <div class="step-number">3</div>
             <div class="step-icon">🔗</div>
+            <h3>Fragment</h3>
+            <p>
+              Payload is converted into a URL-safe Base64 string and appended after the
+              <code>#</code> hash.
+            </p>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">4</div>
+            <div class="step-icon">📱</div>
             <h3>Share</h3>
-            <p>The URL is generated. Send it to anyone, anywhere.</p>
+            <p>Send the link or let others scan the adaptive QR code directly from your display.</p>
           </div>
           <svg class="timeline-connector" viewBox="0 0 1000 50" preserveAspectRatio="none">
             <path
@@ -146,8 +752,9 @@
         </div>
       </section>
 
+      <!-- TECH STACK MARQUEE -->
       <section class="tech-stack scroll-reveal">
-        <h2>Powered By</h2>
+        <h2>Built on Open Web Standards</h2>
         <div class="marquee-container">
           <div class="marquee">
             <span
@@ -163,9 +770,8 @@
                 <path
                   d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
                 />
-                <path d="M2 12h20" />
-              </svg>
-              WebAssembly</span
+                <path d="M2 12h20" /></svg
+              >WebAssembly</span
             >
             <span
               ><svg
@@ -180,9 +786,8 @@
                   d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
                 ></path>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-              </svg>
-              Zstandard</span
+                <line x1="12" y1="22.08" x2="12" y2="12"></line></svg
+              >Zstandard v1.5.5</span
             >
             <span
               ><svg
@@ -193,9 +798,8 @@
                 stroke="currentColor"
                 stroke-width="2"
               >
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-              Prism.js</span
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg
+              >Prism.js</span
             >
             <span
               ><svg
@@ -210,9 +814,8 @@
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
                 <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              HTML5</span
+                <polyline points="10 9 9 9 8 9"></polyline></svg
+              >RFC 3986</span
             >
             <span
               ><svg
@@ -225,9 +828,8 @@
               >
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              CSS3</span
+                <line x1="12" y1="8" x2="12.01" y2="8"></line></svg
+              >Vanilla Modern JS</span
             >
             <span
               ><svg
@@ -241,10 +843,10 @@
                 <path
                   d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
                 ></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-              JavaScript</span
+                <polyline points="22,6 12,13 2,6"></polyline></svg
+              >QRCode.js</span
             >
+            <!-- Duplicate for seamless scroll -->
             <span
               ><svg
                 width="24"
@@ -258,9 +860,8 @@
                 <path
                   d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
                 />
-                <path d="M2 12h20" />
-              </svg>
-              WebAssembly</span
+                <path d="M2 12h20" /></svg
+              >WebAssembly</span
             >
             <span
               ><svg
@@ -275,9 +876,8 @@
                   d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
                 ></path>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-              </svg>
-              Zstandard</span
+                <line x1="12" y1="22.08" x2="12" y2="12"></line></svg
+              >Zstandard v1.5.5</span
             >
             <span
               ><svg
@@ -288,64 +888,23 @@
                 stroke="currentColor"
                 stroke-width="2"
               >
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-              Prism.js</span
-            >
-            <span
-              ><svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              HTML5</span
-            >
-            <span
-              ><svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              CSS3</span
-            >
-            <span
-              ><svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-                ></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-              JavaScript</span
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg
+              >Prism.js</span
             >
           </div>
         </div>
       </section>
 
+      <!-- PRIVACY ARCHITECTURAL COMPARISON -->
       <section id="privacy" class="privacy-showcase scroll-reveal">
-        <h2>The Privacy Difference</h2>
+        <div class="section-header">
+          <span class="section-tag">Security Architecture</span>
+          <h2>The Privacy Difference</h2>
+          <p class="section-subtext">
+            How traditional pastebins put your code at risk versus SharePaste's zero-custody model.
+          </p>
+        </div>
+
         <div class="comparison">
           <div class="compare-side traditional">
             <h3>Traditional Pastebin</h3>
@@ -437,10 +996,11 @@
                   <path d="M8 20v2h8v-2"></path>
                   <path d="M12.5 17l-.5-1-.5 1h1z"></path>
                   <path d="M16 20a2 2 0 001.56-2.25 8 8 0 10-11.12 0A2 2 0 008 20"></path></svg
-                >Data Stored Forever
+                >Stored On Cloud Disks
               </div>
             </div>
           </div>
+
           <div class="compare-side sharepaste">
             <h3>SharePaste</h3>
             <div class="flow">
@@ -484,7 +1044,7 @@
                 >
                   <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"></path>
                   <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"></path></svg
-                >URL
+                >URL Fragment #
               </div>
               <div class="flow-result">
                 <svg
@@ -497,48 +1057,237 @@
                   style="vertical-align: middle; margin-right: 8px"
                 >
                   <polyline points="20 6 9 17 4 12"></polyline></svg
-                >Zero Server Storage
+                >Zero Server Custody
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- CALL TO ACTION SECTION -->
       <section class="cta-section scroll-reveal">
         <div class="cta-glow"></div>
-        <h2>Ready to share securely?</h2>
-        <p class="social-proof">Open source. MIT licensed. Trusted by developers.</p>
-        <a href="app.html" class="btn-shimmer large-btn">
-          <span class="shimmer-text">Launch SharePaste</span>
-          <div class="shimmer-glow"></div>
-        </a>
+        <h2>Ready to share code without compromises?</h2>
+        <p class="social-proof">Open source. Zero databases. Zero tracking. MIT licensed.</p>
+        <div class="cta-buttons">
+          <a href="app.html" class="btn-shimmer large-btn">
+            <span class="shimmer-text">Launch SharePaste</span>
+            <div class="shimmer-glow"></div>
+          </a>
+          <a
+            href="https://github.com/sidhu1512/SharePaste"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-gh-large"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
       </section>
     </main>
 
+    <!-- FOOTER (All Links Fixed to sidhu1512/SharePaste) -->
     <footer class="footer">
       <div class="footer-separator"></div>
       <div class="footer-content">
+        <div class="footer-col brand-col">
+          <div class="logo">
+            <img src="favicon.svg" alt="SharePaste Logo" class="logo-img" width="28" height="28" />
+            <span>SharePaste</span>
+          </div>
+          <p class="brand-bio">
+            High-density, serverless code and snippet sharing engineered with WebAssembly Zstandard
+            compression and RFC 3986 client fragments.
+          </p>
+          <div class="github-badge-row">
+            <a
+              href="https://github.com/sidhu1512/SharePaste"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-gh-pill"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                />
+              </svg>
+              <span>sidhu1512/SharePaste</span>
+            </a>
+          </div>
+        </div>
+
         <div class="footer-col">
           <h4>Product</h4>
-          <a href="app.html">App</a>
+          <a href="app.html">Launch App</a>
+          <a href="#showcase">Showcase Stage</a>
+          <a href="#lab">Interactive Lab</a>
           <a href="#features">Features</a>
-          <a href="#privacy">Privacy</a>
+          <a href="#shortcuts">Shortcuts</a>
         </div>
+
         <div class="footer-col">
-          <h4>Docs</h4>
-          <a href="https://github.com/sharepaste/sharepaste">GitHub</a>
-          <a href="SECURITY.md">Security</a>
-          <a href="CONTRIBUTING.md">Contributing</a>
+          <h4>Open Source & Docs</h4>
+          <a
+            href="https://github.com/sidhu1512/SharePaste"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub Repository</a
+          >
+          <a href="SECURITY.md">Security Policy</a>
+          <a href="CONTRIBUTING.md">Contributing Guide</a>
+          <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>
+          <a href="LICENSE">MIT License</a>
         </div>
+
         <div class="footer-col">
-          <h4>Made with ♥</h4>
-          <p>Built for the open web.</p>
+          <h4>Architectural Specs</h4>
+          <p class="footer-spec-item"><strong>Algorithm:</strong> Zstandard v1.5.5</p>
+          <p class="footer-spec-item"><strong>Execution:</strong> WebAssembly</p>
+          <p class="footer-spec-item"><strong>Datastore:</strong> None (Client URI)</p>
+          <p class="footer-spec-item"><strong>Privacy:</strong> 100% Zero-Trust</p>
         </div>
       </div>
+
       <div class="footer-bottom">
-        <p>&copy; <span id="year"></span> SharePaste. MIT License.</p>
+        <p>
+          &copy; <span id="year"></span> SharePaste. Created by
+          <a
+            href="https://github.com/sidhu1512"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="author-link"
+            >Siddharth Bhadu</a
+          >. Open-source under MIT License.
+        </p>
       </div>
     </footer>
+
+    <!-- HIGH-DPI IMAGE LIGHTBOX MODAL -->
+    <div class="lightbox-modal" id="lightbox-modal" aria-hidden="true" role="dialog">
+      <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+      <div class="lightbox-container">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">✕</button>
+        <img
+          src="docs/screenshots/overview_retina.png"
+          alt="High-DPI Preview"
+          id="lightbox-img"
+          class="lightbox-image"
+        />
+        <div class="lightbox-footer">
+          <span id="lightbox-caption">High-DPI Retina Screenshot</span>
+          <span class="lightbox-hint">Press <kbd>Esc</kbd> to close</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAYCAST-STYLE COMMAND PALETTE MODAL (Ctrl + K) -->
+    <div class="cmd-palette-modal" id="cmd-palette" aria-hidden="true" role="dialog">
+      <div class="cmd-palette-backdrop" id="cmd-backdrop"></div>
+      <div class="cmd-palette-container">
+        <div class="cmd-search-bar">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="cmd-input"
+            placeholder="Type a command or search sections..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <kbd class="cmd-esc-badge">ESC</kbd>
+        </div>
+
+        <div class="cmd-results" id="cmd-results">
+          <div class="cmd-group-title">Navigation</div>
+          <div class="cmd-item" data-action="link" data-href="app.html">
+            <span class="cmd-item-icon">🚀</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Launch SharePaste App</span>
+              <span class="cmd-item-desc">Open the serverless code editor</span>
+            </div>
+            <kbd class="cmd-item-kbd">Enter</kbd>
+          </div>
+          <div class="cmd-item" data-action="link" data-href="#lab">
+            <span class="cmd-item-icon">🧪</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Interactive Compression Lab</span>
+              <span class="cmd-item-desc">Test real-time Zstandard compression & QR threshold</span>
+            </div>
+          </div>
+          <div class="cmd-item" data-action="link" data-href="#showcase">
+            <span class="cmd-item-icon">⚡</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Product Showcase Stage</span>
+              <span class="cmd-item-desc">Explore editor, QR engine, and floating dock</span>
+            </div>
+          </div>
+          <div class="cmd-item" data-action="link" data-href="#architecture">
+            <span class="cmd-item-icon">📐</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Architecture Deep-Dive</span>
+              <span class="cmd-item-desc">RFC 3986 URI hash specification explained</span>
+            </div>
+          </div>
+          <div class="cmd-item" data-action="link" data-href="#privacy">
+            <span class="cmd-item-icon">🔒</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Privacy Difference</span>
+              <span class="cmd-item-desc">Traditional pastebins vs SharePaste zero-storage</span>
+            </div>
+          </div>
+          <div class="cmd-item" data-action="link" data-href="#shortcuts">
+            <span class="cmd-item-icon">⌨️</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Keyboard Shortcuts Matrix</span>
+              <span class="cmd-item-desc">Home-row ergonomics and key bindings</span>
+            </div>
+          </div>
+
+          <div class="cmd-group-title">Actions & Links</div>
+          <div class="cmd-item" data-action="copy-url">
+            <span class="cmd-item-icon">📋</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Copy SharePaste Website URL</span>
+              <span class="cmd-item-desc">Copy site link to clipboard</span>
+            </div>
+          </div>
+          <div
+            class="cmd-item"
+            data-action="link-ext"
+            data-href="https://github.com/sidhu1512/SharePaste"
+          >
+            <span class="cmd-item-icon">⭐</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">Star Repository on GitHub</span>
+              <span class="cmd-item-desc">sidhu1512/SharePaste</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cmd-footer">
+          <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+          <span>Select <kbd>↵</kbd></span>
+          <span>Close <kbd>ESC</kbd></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="landing.js"></script>
   </body>
