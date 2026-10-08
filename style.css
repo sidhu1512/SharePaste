@@ -372,7 +372,9 @@ body.is-dragging #drop-overlay {
 .snowflake {
   position: fixed;
   top: -20px;
-  color: white;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
   user-select: none;
   pointer-events: none;
   z-index: 50;

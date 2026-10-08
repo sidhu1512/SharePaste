@@ -942,11 +942,12 @@ if (snowBtn) {
     } else {
       snowInterval = setInterval(() => {
         const s = document.createElement('div');
-        s.innerText = '❅';
         s.classList.add('snowflake');
+        const size = Math.random() * 4 + 3;
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
         s.style.left = Math.random() * 100 + 'vw';
-        s.style.fontSize = Math.random() * 10 + 10 + 'px';
-        s.style.opacity = Math.random() * 0.5 + 0.1;
+        s.style.opacity = Math.random() * 0.7 + 0.3;
         s.style.animationDuration = Math.random() * 3 + 3 + 's';
         snowContainer.appendChild(s);
         setTimeout(() => s.remove(), 4000);
