@@ -12,16 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.querySelector('.mobile-menu-toggle');
   const navMenu = document.getElementById('nav-menu');
 
+  const ICON_HAMBURGER = `<svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+  const ICON_CLOSE = `<svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
   if (menuToggle && navMenu) {
+    menuToggle.innerHTML = ICON_HAMBURGER;
     menuToggle.addEventListener('click', () => {
       navMenu.classList.toggle('open');
-      menuToggle.textContent = navMenu.classList.contains('open') ? '✕' : '☰';
+      menuToggle.innerHTML = navMenu.classList.contains('open') ? ICON_CLOSE : ICON_HAMBURGER;
     });
 
     navMenu.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', () => {
         navMenu.classList.remove('open');
-        menuToggle.textContent = '☰';
+        menuToggle.innerHTML = ICON_HAMBURGER;
       });
     });
   }
@@ -118,47 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
     { threshold: 0.4 }
   );
   counters.forEach((counter) => counterObserver.observe(counter));
-
-  // -------------------------------------------------------------
-  // 6. Typewriter Effect for Hero Text & Mock Code
-  // -------------------------------------------------------------
-  const typewriterText = document.querySelector('.typewriter-text');
-  if (typewriterText) {
-    const textHtml = typewriterText.innerHTML;
-    const textToType = textHtml.replace(/<br>/gi, '||');
-    typewriterText.innerHTML = '';
-    let i = 0;
-    const speed = 40;
-
-    function typeWriter() {
-      if (i < textToType.length) {
-        if (textToType.slice(i, i + 2) === '||') {
-          typewriterText.innerHTML += '<br>';
-          i += 2;
-        } else {
-          typewriterText.innerHTML += textToType.charAt(i);
-          i++;
-        }
-        setTimeout(typeWriter, speed);
-      }
-    }
-    setTimeout(typeWriter, 300);
-  }
-
-  const typewriterCode = document.querySelector('.typewriter-code');
-  if (typewriterCode) {
-    const codeText = typewriterCode.textContent;
-    typewriterCode.textContent = '';
-    let j = 0;
-    function typeCode() {
-      if (j < codeText.length) {
-        typewriterCode.textContent += codeText.charAt(j);
-        j++;
-        setTimeout(typeCode, 80);
-      }
-    }
-    setTimeout(typeCode, 1200);
-  }
 
   // -------------------------------------------------------------
   // 7. Interactive 3-Column Showcase Stage (doing-it Inspired)
